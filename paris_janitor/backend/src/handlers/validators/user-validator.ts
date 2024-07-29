@@ -1,17 +1,19 @@
 import Joi from "joi";
 
 export interface UserValidation {
-  name: string;
+  firstname: string;
+  lastname: string;
   email: string;
   password: string;
   role: 'admin' | 'client' | 'guest';
 }
 
 export const userValidation = Joi.object<UserValidation>({
-  name: Joi.string().required(),
+  firstname: Joi.string().required(),
+  lastname: Joi.string().required(),
   email: Joi.string().required(),
   password: Joi.string().required(),
-  role: Joi.string().valid('admin', 'client', 'guest').required(),
+  role: Joi.string().valid('client', 'guest').required(),
 });
 
 export interface AuthUserValidation {
@@ -34,7 +36,8 @@ export const deleteUserValidation = Joi.object<DeleteUserValidation>({
 
 export interface UpdateUserValidation {
   id: number;
-  name?: string;
+  firstname?: string;
+  lastname?: string;
   email?: string;
   password?: string;
   role?: 'admin' | 'client' | 'guest';
@@ -42,7 +45,8 @@ export interface UpdateUserValidation {
 
 export const updateUserValidation = Joi.object<UpdateUserValidation>({
   id: Joi.number().required(),
-  name: Joi.string().optional(),
+  firstname: Joi.string().optional(),
+  lastname: Joi.string().optional(),
   email: Joi.string().optional(),
   password: Joi.string().optional(),
   role: Joi.string().valid('admin', 'client', 'guest').optional(),

@@ -29,6 +29,7 @@ export interface UpdatePropertyValidation {
   owner_id?: number;
   availabilityCalendar?: string;
   imageUrl?: string;
+  verified?: boolean;
 }
 
 export const updatePropertyValidation = Joi.object<UpdatePropertyValidation>({
@@ -40,6 +41,7 @@ export const updatePropertyValidation = Joi.object<UpdatePropertyValidation>({
   owner_id: Joi.number().optional(),
   availabilityCalendar: Joi.string().optional(),
   imageUrl: Joi.string().uri().optional(),
+  verified: Joi.boolean().optional(),
 });
 
 export interface DeletePropertyValidation {
@@ -53,9 +55,11 @@ export const deletePropertyValidation = Joi.object<DeletePropertyValidation>({
 export interface ListPropertyValidation {
   limit?: number;
   page?: number;
+  verified?: boolean;
 }
 
 export const listPropertyValidation = Joi.object<ListPropertyValidation>({
   limit: Joi.number().min(1).optional(),
   page: Joi.number().min(1).optional(),
+  verified: Joi.boolean().optional(),
 });

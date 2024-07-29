@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { authenticateToken, authorizeAdmin } from '../middlewares/authMiddleware';
+import { authenticateToken, authorizeAdmin,authorizeAdminOrOwner } from '../middlewares/authMiddleware';
 import {
   createPropertyValidation,
   updatePropertyValidation,
@@ -12,7 +12,7 @@ import { PropertyUsecase } from "../../domain/property-usecase";
 import { Property } from "../../database/entities/property";
 
 export const initPropertyRoutes = (app: express.Express) => {
-  app.get("/properties", async (req: Request, res: Response) => {
+  app.get("/properties", authenticateToken, authorizeAdminOrOwner, async (req: Request, res: Response) => {
     const validation = listPropertyValidation.validate(req.query);
 
     if (validation.error) {
@@ -41,7 +41,58 @@ export const initPropertyRoutes = (app: express.Express) => {
     }
   });
 
-  app.get("/properties/:propertyId", authenticateToken, authorizeAdmin, async (req: Request, res: Response) => {
+  app.get("/properties/verified", async (req: Request, res: Response) => {
+    const validation = listPropertyValidation.validate(req.query);
+
+    if (validation.error) {
+        res.status(400).send(generateValidationErrorMessage(validation.error.details));
+        return;
+    }
+
+    const listPropertyReq = validation.value;
+    let limit = 20;
+    if (listPropertyReq.limit) {
+        limit = listPropertyReq.limit;
+    }
+    const page = listPropertyReq.page ?? 1;
+
+    try {
+        const propertyUsecase = new PropertyUsecase(AppDataSource);
+        const { properties, totalCount } = await propertyUsecase.listProperties({
+            ...listPropertyReq,
+            page,
+            limit,
+            verified: true,
+        });
+
+        const verifiedProperties = properties.filter(property => property.verified === true);
+
+        res.status(200).send({ properties: verifiedProperties, totalCount: verifiedProperties.length });
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({ error: "Internal server error" });
+    }
+});
+
+app.get("/properties/owner/:ownerId", authenticateToken, authorizeAdminOrOwner, async (req: Request, res: Response) => {
+  const { ownerId } = req.params;
+
+  try {
+      const propertyUsecase = new PropertyUsecase(AppDataSource);
+      const properties = await propertyUsecase.getPropertiesByOwnerId(Number(ownerId));
+
+      if (properties.length) {
+          res.status(200).send(properties);
+      } else {
+          res.status(404).send({ error: "No properties found for this owner" });
+      }
+  } catch (error) {
+      console.log(error);
+      res.status(500).send({ error: "Internal server error" });
+  }
+});
+
+  app.get("/properties/:propertyId", authenticateToken, authorizeAdminOrOwner, async (req: Request, res: Response) => {
     const { propertyId } = req.params;
 
     try {
@@ -59,7 +110,7 @@ export const initPropertyRoutes = (app: express.Express) => {
     }
   });
 
-  app.post("/properties", authenticateToken, authorizeAdmin, async (req: Request, res: Response) => {
+  app.post("/properties", authenticateToken,authorizeAdminOrOwner, async (req: Request, res: Response) => {
     const validation = createPropertyValidation.validate(req.body);
 
     if (validation.error) {
@@ -79,7 +130,7 @@ export const initPropertyRoutes = (app: express.Express) => {
     }
   });
 
-  app.patch("/properties/:id", authenticateToken, authorizeAdmin, async (req: Request, res: Response) => {
+  app.patch("/properties/:id", authenticateToken, authorizeAdminOrOwner, async (req: Request, res: Response) => {
     const validation = updatePropertyValidation.validate({
       ...req.params,
       ...req.body,
@@ -109,7 +160,7 @@ export const initPropertyRoutes = (app: express.Express) => {
     }
   });
 
-  app.delete("/properties/:id", authenticateToken, authorizeAdmin, async (req: Request, res: Response) => {
+  app.delete("/properties/:id", authenticateToken, authorizeAdminOrOwner, async (req: Request, res: Response) => {
     const validation = deletePropertyValidation.validate(req.params);
 
     if (validation.error) {

@@ -3,6 +3,7 @@ import {initUserRoutes } from "./handlers/routes/user-routes";
 import { initInvoiceRoutes } from "./handlers/routes/invoice-routes";
 import { initPropertyRoutes } from "./handlers/routes/property-routes";
 import { initReservationRoutes } from "./handlers/routes/reservation-routes";
+import { initAvailabilityRoutes } from "./handlers/routes/availability-routes";
 import { AppDataSource } from "./database/database";
 const cors = require('cors');
 
@@ -32,6 +33,7 @@ const main = async () => {
   initInvoiceRoutes(app);
   initPropertyRoutes(app);
   initReservationRoutes(app);
+  initAvailabilityRoutes(app);
 
   app.listen(port, () => {
     console.log(`Server running on port ${port}`);

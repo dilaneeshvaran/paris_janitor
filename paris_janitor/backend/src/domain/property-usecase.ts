@@ -4,6 +4,7 @@ import { Property } from "../database/entities/property";
 export interface ListProperty {
     limit: number;
     page: number;
+    verified?: boolean;
 }
 
 export interface UpdatePropertyParams {
@@ -15,6 +16,7 @@ export interface UpdatePropertyParams {
     owner_id?: number;
     availabilityCalendar?: string;
     imageUrl?: string;
+    verified?: boolean;
 }
 
 export class PropertyUsecase {
@@ -47,6 +49,22 @@ export class PropertyUsecase {
         }
       
         return property;
+    }
+
+    async getPropertiesByOwnerId(ownerId: number): Promise<Property[]> {
+        const query = this.db.createQueryBuilder(Property, "properties");
+        
+        query.where("properties.owner_id = :ownerId", { ownerId }); 
+        
+        console.log("Executing query:", query.getSql(), "with parameters:", { ownerId }); 
+        
+        const properties = await query.getMany();
+        
+        if (!properties.length) {
+            throw new Error('No properties found for this owner');
+        }
+        
+        return properties;
     }
 
     async updateProperty(

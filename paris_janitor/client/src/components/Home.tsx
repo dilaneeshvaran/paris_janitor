@@ -16,7 +16,7 @@ const Home: React.FC = () => {
     const [currentSlide, setCurrentSlide] = useState(0);
 
     useEffect(() => {
-        fetch('http://localhost:3000/properties')
+        fetch('http://localhost:3000/properties/verified')
             .then(response => response.json())
             .then(data => {
                 console.log('Fetched data:', data);

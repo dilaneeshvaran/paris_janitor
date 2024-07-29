@@ -44,7 +44,7 @@ const Login: React.FC = () => {
                     return;
                 }
 
-                login(token, userId);
+                login(token, userId, role); // Pass the role to the login function
 
                 if (role === 'guest') {
                     navigate('/dashboard/client');

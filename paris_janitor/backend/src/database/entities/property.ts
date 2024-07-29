@@ -26,6 +26,9 @@ export class Property {
     @Column({ nullable: true })
     imageUrl?: string;
 
+    @Column()
+    verified: boolean = false;
+
     constructor(
         name: string,
         description: string,
@@ -34,6 +37,7 @@ export class Property {
         owner_id: number,
         availabilityCalendar: string,
         imageUrl?: string,
+        verified: boolean = false
     ) {
         this.name = name;
         this.description = description;
@@ -42,5 +46,6 @@ export class Property {
         this.owner_id = owner_id;
         this.availabilityCalendar = availabilityCalendar;
         this.imageUrl = imageUrl;
+        this.verified = verified;
     }
 }

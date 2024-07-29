@@ -4,7 +4,17 @@
   padding: 2rem;
   text-align: center;
 }
+body {
+  overflow: hidden;
+}
 
+.center-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; 
+  text-align: center;
+}
 .logo {
   height: 6em;
   padding: 1.5em;

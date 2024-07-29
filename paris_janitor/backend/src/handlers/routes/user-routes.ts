@@ -196,7 +196,12 @@ app.patch("/users/:id",authenticateToken, async (req: Request, res: Response) =>
         if (isPasswordMatch) {
           // Generate JWT token when user authed
           const token = jwt.sign({ id: user.id, role: user.role }, 'your_secret_key', { expiresIn: '1h' });
-          res.status(200).send({ message: "User authenticated successfully", token });
+          res.status(200).send({ 
+            message: "User authenticated successfully", 
+            token, 
+            userId: user.id, 
+            role: user.role 
+          });
         } else {
           res.status(401).send({ message: "Invalid username or password" });
         }

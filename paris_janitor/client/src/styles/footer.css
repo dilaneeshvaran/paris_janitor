@@ -1,0 +1,17 @@
+.footer {
+    margin-top: 2rem;
+    margin-left: 11rem;
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+}
+
+.footer a {
+    color: #000;
+    text-decoration: none;
+    margin-left: 2rem;
+}
+
+.footer a:hover {
+    color: #007bff;
+}

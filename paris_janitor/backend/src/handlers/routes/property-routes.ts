@@ -12,7 +12,7 @@ import { PropertyUsecase } from "../../domain/property-usecase";
 import { Property } from "../../database/entities/property";
 
 export const initPropertyRoutes = (app: express.Express) => {
-  app.get("/properties", authenticateToken, authorizeAdmin, async (req: Request, res: Response) => {
+  app.get("/properties", async (req: Request, res: Response) => {
     const validation = listPropertyValidation.validate(req.query);
 
     if (validation.error) {

@@ -1,8 +1,25 @@
-
 .center-content {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh; 
-    text-align: center;
+    height: 100vh;
+    flex-direction: column;
+}
+
+input {
+    display: block;
+    margin: 10px 0;
+    padding: 10px;
+    width: 100%;
+    max-width: 300px;
+}
+
+button {
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.error {
+    color: red;
+    margin-bottom: 10px;
 }

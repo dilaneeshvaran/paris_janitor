@@ -6,7 +6,10 @@ export class User {
     id!: number;
 
     @Column()
-    name: string;
+    firstname: string;
+    
+    @Column()
+    lastname: string;
 
     @Column()
     email: string;
@@ -14,23 +17,30 @@ export class User {
     @Column()
     password: string; // hashed password
 
-    @Column()
-    role: 'admin' | 'client';
+    @Column({ default: false })
+    subscription_status?: boolean;
 
-    @Column({default:0})
-    balance: number;
+    @Column({ default: false })
+    vip_status?: boolean;
+
+    @Column()
+    role: 'admin' | 'client' | 'guest';
 
     constructor(
-        name: string,
+        firstname: string,
+        lastname: string,
         email: string,
         password: string,
-        role: 'admin' | 'client',
-        balance: number
-      ) {
-        this.name = name;
+        role: 'admin' | 'client' | 'guest',
+        subscription_status?: boolean,
+        vip_status?: boolean,
+    ) {
+        this.firstname = firstname;
+        this.lastname = lastname;
         this.email = email;
         this.password = password;
         this.role = role;
-        this.balance = balance;
-      }
+        this.subscription_status = subscription_status || false;
+        this.vip_status = vip_status || false;
+    }
 }

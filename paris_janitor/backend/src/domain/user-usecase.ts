@@ -1,7 +1,6 @@
 import {DataSource} from "typeorm";
 import { User } from "../database/entities/user";
 import bcrypt from 'bcrypt';
-import { Transaction, TransactionType } from '../database/entities/transaction';
 
 export interface ListUser {
     limit: number;
@@ -10,14 +9,17 @@ export interface ListUser {
 
 export interface UpdateUserParams {
     id: number;
-    name?: string;
+    firstname?: string;
+    lastname?: string;
     email?: string;
     password?: string;
+    subscription_status?: boolean;
+    vip_status?: boolean;
   }
 
   export interface ChangeUserRoleParams {
     id: number;
-    role?: 'admin' | 'client';
+    role?: 'admin' | 'client' | 'guest';
   }
 
 export class UserUsecase {
@@ -68,7 +70,7 @@ export class UserUsecase {
 
     async updateUser(
         id: number,
-        { name, email, password }: UpdateUserParams
+        { firstname,lastname, email, password }: UpdateUserParams
     ): Promise<User | null> {
         const repo = this.db.getRepository(User);
         const userFound = await repo.findOneBy({ id });
@@ -81,11 +83,20 @@ export class UserUsecase {
             }
             userFound.email = email;
         }
-        if (name) {
-            userFound.name = name;
+        if (firstname) {
+            userFound.firstname = firstname;
+        }
+        if (lastname) {
+            userFound.lastname = lastname;
         }
         if (password) {
             userFound.password = await this.hashPassword(password);
+        }
+        if(userFound.subscription_status){
+            userFound.subscription_status = true;
+        }
+        if(userFound.vip_status){
+            userFound.vip_status = true;
         }
         const userUpdate = await repo.save(userFound);
         return userUpdate;
@@ -120,7 +131,7 @@ export class UserUsecase {
         return !!user;
     }
 
-    async changeUserRole(userId: number, newRole: 'admin' | 'client'): Promise<User | null> {
+    async changeUserRole(userId: number, newRole: 'admin' | 'client' | 'guest'): Promise<User | null> {
         const repo = this.db.getRepository(User);
         const user = await repo.findOne({ where: { id: userId } });
     

@@ -4,14 +4,14 @@ export interface UserValidation {
   name: string;
   email: string;
   password: string;
-  role: 'admin' | 'client';
+  role: 'admin' | 'client' | 'guest';
 }
 
 export const userValidation = Joi.object<UserValidation>({
   name: Joi.string().required(),
   email: Joi.string().required(),
   password: Joi.string().required(),
-  role: Joi.string().valid('admin', 'client').required(),
+  role: Joi.string().valid('admin', 'client', 'guest').required(),
 });
 
 export interface AuthUserValidation {
@@ -37,8 +37,7 @@ export interface UpdateUserValidation {
   name?: string;
   email?: string;
   password?: string;
-  role?: 'admin' | 'client';
-  balance?: number;
+  role?: 'admin' | 'client' | 'guest';
 }
 
 export const updateUserValidation = Joi.object<UpdateUserValidation>({
@@ -46,8 +45,7 @@ export const updateUserValidation = Joi.object<UpdateUserValidation>({
   name: Joi.string().optional(),
   email: Joi.string().optional(),
   password: Joi.string().optional(),
-  role: Joi.string().valid('admin', 'client').optional(),
-  balance: Joi.number().optional()
+  role: Joi.string().valid('admin', 'client', 'guest').optional(),
 });
 
 export interface ListValidation {

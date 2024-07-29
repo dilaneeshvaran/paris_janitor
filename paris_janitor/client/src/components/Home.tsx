@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/home.css';
+import Footer from './Footer';
 
-interface Property {
+export interface Property {
     id: number;
     name: string;
     address: string;
@@ -90,7 +91,10 @@ const Home: React.FC = () => {
                     </div>
                 </div>
             )}
+            <Footer />
+
         </div>
+
     );
 };
 

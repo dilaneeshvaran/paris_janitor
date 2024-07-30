@@ -7,11 +7,6 @@
 //devis temps réel
 
 
-
-//Client Visitor
-//Reserve services (remise de clé/transport bagage/accessoire complementaire)
-
-
 //Backoffice
 //accept a property creation
 //see owners details : income/properties/paid membership or not

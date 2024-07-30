@@ -1,5 +1,6 @@
 import { DataSource } from "typeorm";
 import { Service } from "../database/entities/service";
+import { Property } from "../database/entities/property";
 
 export interface ListService {
     limit: number;
@@ -11,6 +12,9 @@ export interface UpdateServiceParams {
     description?: string;
     price?: number;
     provider_id?: number;
+    reservation_id?: number;
+    service_type?: string;
+    status?: "pending" | "completed"| "accepted" | "cancelled";
 }
 
 export class ServiceUsecase {
@@ -55,9 +59,30 @@ export class ServiceUsecase {
         return services;
     }
 
+    async getServiceByUserId(userId: number): Promise<Service[]> {
+        const query = this.db.createQueryBuilder(Service, "services")
+            .innerJoin("reservation", "reservation", "services.reservation_id = reservation.id")
+            .where("reservation.client_id = :id", { id: userId });
+    
+        const services = await query.getMany();
+    
+        return services;
+    }
+
+    async getPropertyByServiceId(serviceId: number): Promise<Property[]> {
+        const query = this.db.createQueryBuilder(Property, "property")
+            .innerJoin("reservation", "reservation", "property.id = reservation.property_id")
+            .innerJoin("service", "service", "reservation.id = service.reservation_id")
+            .where("service.id = :id", { id: serviceId });
+    
+        const properties = await query.getMany();
+    
+        return properties;
+    }
+
     async updateService(
         id: number,
-        { description, price, provider_id }: UpdateServiceParams
+        { description, price, provider_id, service_type, reservation_id,status }: UpdateServiceParams
     ): Promise<Service | null> {
         const repo = this.db.getRepository(Service);
         const serviceFound = await repo.findOneBy({ id });
@@ -72,10 +97,22 @@ export class ServiceUsecase {
         if (provider_id !== undefined) {
             serviceFound.provider_id = provider_id;
         }
+        if(service_type !== undefined) {
+            serviceFound.service_type = service_type;
+        }
+        if(reservation_id !== undefined) {
+            serviceFound.reservation_id = reservation_id;
+        }
+        if(status !== undefined) {
+            serviceFound.status = status;
+        }
+    
         
         const serviceUpdate = await repo.save(serviceFound);
         return serviceUpdate;
     }
+
+    
 
     async deleteService(id: number): Promise<Service | null> {
         const repo = this.db.getRepository(Service);

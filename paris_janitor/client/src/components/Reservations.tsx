@@ -22,6 +22,9 @@ interface ReservationsProps {
 const Reservations: React.FC<ReservationsProps> = ({ userId, onClose }) => {
     const [reservations, setReservations] = useState<Reservation[]>([]);
     const [error, setError] = useState<string | null>(null);
+    const [selectedService, setSelectedService] = useState<string>('');
+    const [description, setDescription] = useState<string>('');
+    const [currentReservationId, setCurrentReservationId] = useState<number | null>(null);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -56,6 +59,47 @@ const Reservations: React.FC<ReservationsProps> = ({ userId, onClose }) => {
         doc.save(`facture_${reservation.id}.pdf`);
     };
 
+    const handleServiceChange = (event: React.ChangeEvent<HTMLSelectElement>, reservationId: number) => {
+        setSelectedService(event.target.value);
+        setCurrentReservationId(reservationId);
+    };
+
+    const handleDescriptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setDescription(event.target.value);
+    };
+
+    const handleSubmitServiceDemand = () => {
+        if (!selectedService || !description) {
+            setError('Please select a service and provide a description.');
+            return;
+        }
+
+        const token = localStorage.getItem('token');
+        const serviceData = {
+            reservation_id: currentReservationId,
+            service_type: selectedService,
+            price: 10,
+            description: description,
+        };
+
+        axios.post('http://localhost:3000/services', serviceData, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            }
+        })
+            .then(response => {
+                console.log('Service demand submitted:', response.data);
+                setSelectedService('');
+                setDescription('');
+                setError(null);
+            })
+            .catch(error => {
+                console.error('Error submitting service demand:', error);
+                setError('Failed to submit service demand.');
+            });
+    };
+
     return (
         <div className="modal">
             <div className="modal-content">
@@ -70,6 +114,9 @@ const Reservations: React.FC<ReservationsProps> = ({ userId, onClose }) => {
                                 <th>End Date</th>
                                 <th>Status</th>
                                 <th>Action</th>
+                                <th>Service</th>
+                                <th>Description</th>
+                                <th>Submit</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -81,6 +128,27 @@ const Reservations: React.FC<ReservationsProps> = ({ userId, onClose }) => {
                                     <td>{reservation.status}</td>
                                     <td>
                                         <button onClick={() => generatePDF(reservation)}>Get Facture</button>
+                                    </td>
+                                    <td>
+                                        <select onChange={(event) => handleServiceChange(event, reservation.id)} value={currentReservationId === reservation.id ? selectedService : ''}>
+                                            <option value="">Select Service</option>
+                                            <option value="cleaning">Cleaning</option>
+                                            <option value="repair">Repair</option>
+                                            <option value="accessory">Accessory</option>
+                                            <option value="baggage">Baggage</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input
+                                            type="text"
+                                            placeholder="Description"
+                                            value={currentReservationId === reservation.id ? description : ''}
+                                            onChange={handleDescriptionChange}
+                                            disabled={currentReservationId !== reservation.id}
+                                        />
+                                    </td>
+                                    <td>
+                                        <button onClick={handleSubmitServiceDemand}>Submit Service Demand</button>
                                     </td>
                                 </tr>
                             ))}

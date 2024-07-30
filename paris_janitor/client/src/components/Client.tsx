@@ -3,7 +3,8 @@ import '../styles/client.css';
 import Reserve from './Reserve';
 import Reservations from './Reservations';
 import EditProfile from './EditProfile';
-import VipStatusModal from './VipStatusModal'; // Import the VIP Status Modal
+import VipStatusModal from './VipStatusModal';
+import Services from './Services'; // Import the Services component
 
 interface Property {
     id: number;
@@ -18,7 +19,8 @@ const ClientDashboard: React.FC = () => {
     const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
     const [showReservations, setShowReservations] = useState<boolean>(false);
     const [showEditProfile, setShowEditProfile] = useState<boolean>(false);
-    const [isVipModalOpen, setIsVipModalOpen] = useState<boolean>(false); // State for VIP modal
+    const [isVipModalOpen, setIsVipModalOpen] = useState<boolean>(false);
+    const [showServices, setShowServices] = useState<boolean>(false); // State for services modal
     const [error, setError] = useState<string | null>(null);
     const userId = localStorage.getItem('userId') || '';
 
@@ -44,7 +46,8 @@ const ClientDashboard: React.FC = () => {
             {error && <p className="error">{error}</p>}
             <button onClick={() => setShowReservations(true)}>My Reservations</button>
             <button onClick={() => setShowEditProfile(true)}>Edit Profile</button>
-            <button onClick={() => setIsVipModalOpen(true)}>Check VIP Status</button> {/* Button for VIP Status */}
+            <button onClick={() => setIsVipModalOpen(true)}>Check VIP Status</button>
+            <button onClick={() => setShowServices(true)}>View Services</button> {/* Button to show services */}
             <div className="properties-list">
                 {properties.length > 0 ? (
                     properties.map(property => (
@@ -83,6 +86,12 @@ const ClientDashboard: React.FC = () => {
                     isOpen={isVipModalOpen}
                     onRequestClose={() => setIsVipModalOpen(false)}
                     userId={parseInt(userId, 10)}
+                />
+            )}
+            {showServices && (
+                <Services
+                    userId={userId}
+                    onClose={() => setShowServices(false)}
                 />
             )}
         </div>

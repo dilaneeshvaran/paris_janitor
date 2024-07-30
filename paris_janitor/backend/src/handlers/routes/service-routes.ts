@@ -73,6 +73,34 @@ export const initServiceRoutes = (app: express.Express) => {
         }
     });
 
+    app.get("/services/user/:userId", authenticateToken, authorizeAll, async (req: Request, res: Response) => {
+        const { userId } = req.params;
+    
+        try {
+            const serviceUsecase = new ServiceUsecase(AppDataSource);
+            const services = await serviceUsecase.getServiceByUserId(Number(userId));
+    
+            res.status(200).send(services);
+        } catch (error) {
+            console.error("Error fetching services by user ID:", error);
+            res.status(500).send({ error: "Internal server error" });
+        }
+    });
+
+    app.get("/properties/service/:serviceId", authenticateToken, authorizeAll, async (req: Request, res: Response) => {
+        const { serviceId } = req.params;
+    
+        try {
+            const serviceUsecase = new ServiceUsecase(AppDataSource);
+            const properties = await serviceUsecase.getPropertyByServiceId(Number(serviceId));
+    
+            res.status(200).send(properties);
+        } catch (error) {
+            console.error("Error fetching properties by service ID:", error);
+            res.status(500).send({ error: "Internal server error" });
+        }
+    });
+
     app.post("/services", authenticateToken, authorizeAll, async (req: Request, res: Response) => {
         const validation = createServiceValidation.validate(req.body);
 

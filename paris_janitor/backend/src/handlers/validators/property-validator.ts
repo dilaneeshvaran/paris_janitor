@@ -1,4 +1,4 @@
-import Joi from "joi";
+import Joi from 'joi';
 
 export interface CreatePropertyValidation {
   name: string;
@@ -6,8 +6,9 @@ export interface CreatePropertyValidation {
   address: string;
   price: number;
   owner_id: number;
-  availabilityCalendar: string;
-  imageUrl: string;
+  availabilityCalendar?: string;
+  imageUrl?: string;
+  verified?: boolean; // This will be set to false by default in the route
 }
 
 export const createPropertyValidation = Joi.object<CreatePropertyValidation>({
@@ -16,8 +17,9 @@ export const createPropertyValidation = Joi.object<CreatePropertyValidation>({
   address: Joi.string().required(),
   price: Joi.number().positive().required(),
   owner_id: Joi.number().required(),
-  availabilityCalendar: Joi.string().required(),
-  imageUrl: Joi.string().uri().required(),
+  availabilityCalendar: Joi.string().allow('').optional(),  // Allow empty string
+  imageUrl: Joi.string().uri().optional(),
+  verified: Joi.boolean().optional(),
 });
 
 export interface UpdatePropertyValidation {

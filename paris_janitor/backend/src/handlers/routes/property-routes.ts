@@ -110,16 +110,19 @@ app.get("/properties/owner/:ownerId", authenticateToken, authorizeAdminOrOwner, 
     }
   });
 
-  app.post("/properties", authenticateToken,authorizeAdminOrOwner, async (req: Request, res: Response) => {
+  app.post("/properties", authenticateToken, authorizeAdminOrOwner, async (req: Request, res: Response) => {
     const validation = createPropertyValidation.validate(req.body);
-
+  
     if (validation.error) {
       res.status(400).send(generateValidationErrorMessage(validation.error.details));
       return;
     }
-
+  
     const propertyRequest = validation.value;
-
+  
+    // Set default values
+    propertyRequest.verified = false;
+  
     try {
       const propertyRepo = AppDataSource.getRepository(Property);
       const propertyCreated = await propertyRepo.save(propertyRequest);

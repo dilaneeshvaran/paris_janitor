@@ -54,7 +54,8 @@ const OwnerDashboard: React.FC = () => {
 
     const handleCreateRoom = async () => {
         const token = localStorage.getItem('token');
-        if (token) {
+        const userId = localStorage.getItem('userId');
+        if (token && userId) {
             let imageUrl = '';
             if (selectedFile) {
                 const formData = new FormData();
@@ -69,38 +70,43 @@ const OwnerDashboard: React.FC = () => {
                     imageUrl = response.data.imageUrl;
                 } catch (error) {
                     console.error('Error uploading image:', error);
-                    return;
+                    return; // Early return if image upload fails
                 }
             }
 
             const propertyData = {
                 ...newProperty,
+                owner_id: userId,
+                verified: false,
                 imageUrl,
-                availabilityCalendar: availabilityDates.map(date => date.toISOString()).join(', ')
+                availabilityCalendar: availabilityDates.length > 0
+                    ? availabilityDates.map(date => date.toISOString()).join(', ')
+                    : ''
             };
 
-            axios.post('http://localhost:3000/properties', propertyData, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            })
-                .then(response => {
-                    setProperties([...properties, response.data]);
-                    setIsCreateModalOpen(false); // Close the modal
-                    setNewProperty({
-                        name: '',
-                        description: '',
-                        address: '',
-                        price: 0,
-                        imageUrl: '',
-                        availabilityCalendar: ''
-                    });
-                    setAvailabilityDates([]);
-                    setSelectedFile(null);
-                })
-                .catch(error => {
-                    console.error('Error creating room:', error);
+            try {
+                const response = await axios.post('http://localhost:3000/properties', propertyData, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
                 });
+                setProperties([...properties, response.data]);
+                setIsCreateModalOpen(false);
+                setNewProperty({
+                    name: '',
+                    description: '',
+                    address: '',
+                    price: 0,
+                    imageUrl: '',
+                    availabilityCalendar: ''
+                });
+                setAvailabilityDates([]);
+                setSelectedFile(null);
+            } catch (error) {
+                console.error('Error creating room:', error);
+            }
+        } else {
+            console.error('Token or User ID not found');
         }
     };
 
@@ -128,7 +134,9 @@ const OwnerDashboard: React.FC = () => {
             const updatedPropertyData = {
                 ...selectedProperty,
                 imageUrl,
-                availabilityCalendar: availabilityDates.map(date => date.toISOString()).join(', ')
+                availabilityCalendar: availabilityDates.length > 0
+                    ? availabilityDates.map(date => date.toISOString()).join(', ')
+                    : ''
             };
 
             axios.put(`http://localhost:3000/properties/${selectedProperty.id}`, updatedPropertyData, {
@@ -138,7 +146,7 @@ const OwnerDashboard: React.FC = () => {
             })
                 .then(response => {
                     setProperties(properties.map(property => property.id === selectedProperty.id ? response.data : property));
-                    setIsUpdateModalOpen(false); // Close the modal
+                    setIsUpdateModalOpen(false);
                     setSelectedProperty(null);
                     setAvailabilityDates([]);
                     setSelectedFile(null);
@@ -189,7 +197,7 @@ const OwnerDashboard: React.FC = () => {
 
     const handleModifyRoom = (property: Property) => {
         setSelectedProperty(property);
-        setAvailabilityDates(property.availabilityCalendar.split(', ').map(dateStr => new Date(dateStr)));
+        setAvailabilityDates(property.availabilityCalendar ? property.availabilityCalendar.split(', ').map(dateStr => new Date(dateStr)) : []);
         setIsUpdateModalOpen(true);
     };
 

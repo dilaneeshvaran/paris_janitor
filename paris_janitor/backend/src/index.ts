@@ -6,6 +6,8 @@ import { initPropertyRoutes } from './handlers/routes/property-routes';
 import { initReservationRoutes } from './handlers/routes/reservation-routes';
 import { initAvailabilityRoutes } from './handlers/routes/availability-routes';
 import { initPaymentRoutes } from './handlers/routes/payment-routes';
+import { initInterventionRoutes } from './handlers/routes/intervention-routes';
+import { initServiceRoutes } from './handlers/routes/service-routes';
 import { AppDataSource } from './database/database';
 import multer from 'multer';
 import path from 'path';
@@ -79,6 +81,8 @@ const main = async () => {
   initReservationRoutes(app);
   initAvailabilityRoutes(app);
   initPaymentRoutes(app);
+  initInterventionRoutes(app);
+  initServiceRoutes(app);
 
   app.listen(port, () => {
     console.log(`Server running on port ${port}`);

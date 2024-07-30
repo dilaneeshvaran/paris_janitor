@@ -10,9 +10,6 @@
 
 //Client Visitor
 //Reserve services (remise de clé/transport bagage/accessoire complementaire)
-//vip status activ for price reduction
-
-
 
 
 //Backoffice
@@ -22,6 +19,5 @@
 //see users : reservations
 
 
-
-
+//Clean CSS
 //HEBERGER

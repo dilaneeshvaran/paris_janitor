@@ -3,6 +3,7 @@ import '../styles/client.css';
 import Reserve from './Reserve';
 import Reservations from './Reservations';
 import EditProfile from './EditProfile';
+import VipStatusModal from './VipStatusModal'; // Import the VIP Status Modal
 
 interface Property {
     id: number;
@@ -17,6 +18,7 @@ const ClientDashboard: React.FC = () => {
     const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
     const [showReservations, setShowReservations] = useState<boolean>(false);
     const [showEditProfile, setShowEditProfile] = useState<boolean>(false);
+    const [isVipModalOpen, setIsVipModalOpen] = useState<boolean>(false); // State for VIP modal
     const [error, setError] = useState<string | null>(null);
     const userId = localStorage.getItem('userId') || '';
 
@@ -42,6 +44,7 @@ const ClientDashboard: React.FC = () => {
             {error && <p className="error">{error}</p>}
             <button onClick={() => setShowReservations(true)}>My Reservations</button>
             <button onClick={() => setShowEditProfile(true)}>Edit Profile</button>
+            <button onClick={() => setIsVipModalOpen(true)}>Check VIP Status</button> {/* Button for VIP Status */}
             <div className="properties-list">
                 {properties.length > 0 ? (
                     properties.map(property => (
@@ -73,6 +76,13 @@ const ClientDashboard: React.FC = () => {
                 <EditProfile
                     userId={userId}
                     onClose={() => setShowEditProfile(false)}
+                />
+            )}
+            {isVipModalOpen && (
+                <VipStatusModal
+                    isOpen={isVipModalOpen}
+                    onRequestClose={() => setIsVipModalOpen(false)}
+                    userId={parseInt(userId, 10)}
                 />
             )}
         </div>

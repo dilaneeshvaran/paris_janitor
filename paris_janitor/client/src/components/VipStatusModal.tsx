@@ -26,8 +26,13 @@ const VipStatusModal: React.FC<VipStatusModalProps> = ({ isOpen, onRequestClose,
     useEffect(() => {
         const checkVipStatus = async () => {
             try {
-                const response = await axios.get(`/api/user/${userId}/status`);
-                setVipStatus(response.data.vip_status);
+                const token = localStorage.getItem('token');
+                const response = await axios.get(`http://localhost:3000/users/vip/${userId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+                setVipStatus(response.data.isVip);
             } catch (error) {
                 console.error('Error checking VIP status:', error);
             }
@@ -35,6 +40,11 @@ const VipStatusModal: React.FC<VipStatusModalProps> = ({ isOpen, onRequestClose,
 
         checkVipStatus();
     }, [userId]);
+
+
+    console.log("::::::::vipstatus", vipStatus);
+    console.log("::::::::userid", userId);
+
 
     const handlePayment = async () => {
         try {
@@ -58,6 +68,27 @@ const VipStatusModal: React.FC<VipStatusModalProps> = ({ isOpen, onRequestClose,
         }
     };
 
+    const handleRemoveSubscription = async () => {
+        try {
+            setLoading(true);
+            const token = localStorage.getItem('token');
+            await axios.patch(`http://localhost:3000/users/${userId}/vip`,
+                { vip_status: false },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+            setVipStatus(false);
+        } catch (error) {
+            console.error('Error removing subscription:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+
     const fetchPaymentHistory = async () => {
         try {
             const response = await axios.get(`/api/user/${userId}/payments`);
@@ -79,10 +110,14 @@ const VipStatusModal: React.FC<VipStatusModalProps> = ({ isOpen, onRequestClose,
             contentLabel="VIP Status Modal"
         >
             <h2>VIP Status</h2>
-            <p>VIP Status: {vipStatus ? 'Activated' : 'Not Activated'}</p>
-            {!vipStatus && (
+            <p>VIP Status: {vipStatus ? 'Activé' : 'Non'}</p>
+            {!vipStatus ? (
                 <button onClick={handlePayment} disabled={loading}>
-                    {loading ? 'Processing...' : 'Activate VIP Status for $10'}
+                    {loading ? 'Proces en cours...' : 'Activer le Status VIP pour $10'}
+                </button>
+            ) : (
+                <button onClick={handleRemoveSubscription} disabled={loading}>
+                    {loading ? 'Proces en cours...' : 'Désactiver le Status VIP'}
                 </button>
             )}
             <button onClick={toggleHistory}>

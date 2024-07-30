@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
 import jwt from 'jsonwebtoken';
-import { authenticateToken, authorizeAdmin } from '../middlewares/authMiddleware';
+import { authenticateToken, authorizeAdmin,authorizeAdminOrOwner } from '../middlewares/authMiddleware';
 
 import {
   userValidation,
@@ -20,7 +20,7 @@ export const initUserRoutes = (app: express.Express) => {
     res.send({ message: "hello world" });
   });
 
-  app.get("/users",authenticateToken, authorizeAdmin, async (req: Request, res: Response) => {
+  app.get("/users",authenticateToken, authorizeAdminOrOwner, async (req: Request, res: Response) => {
     const validation = listValidation.validate(req.query);
 
     if (validation.error) {
@@ -51,7 +51,7 @@ export const initUserRoutes = (app: express.Express) => {
     }
   });
 
-  app.get("/users/:userId",authenticateToken, authorizeAdmin, async (req: Request, res: Response) => {
+  app.get("/users/:userId",authenticateToken, authorizeAdminOrOwner, async (req: Request, res: Response) => {
     const { userId } = req.params;
   
     try {
@@ -68,6 +68,20 @@ export const initUserRoutes = (app: express.Express) => {
       res.status(500).send({ error: "Internal server error" });
     }
   });
+
+  app.get("/users/vip/:userId", authenticateToken, authorizeAdminOrOwner, async (req: Request, res: Response) => {
+    const { userId } = req.params;
+
+    try {
+        const userUsecase = new UserUsecase(AppDataSource);
+        const isVip = await userUsecase.isUserVip(Number(userId));
+
+        res.status(200).send({ isVip });
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({ error: "Internal server error" });
+    }
+});
 
   app.post("/users", async (req: Request, res: Response) => {
     const validation = userValidation.validate(req.body);
@@ -134,7 +148,35 @@ app.patch("/users/:id",authenticateToken, async (req: Request, res: Response) =>
     }
   });
 
-  app.patch("/users/:id/role", authenticateToken, authorizeAdmin, async (req: Request, res: Response) => {
+  app.patch("/users/:id/vip", authenticateToken, async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const { vip_status } = req.body;
+
+    if (typeof vip_status !== 'boolean') {
+        res.status(400).send({ error: "Invalid VIP status value" });
+        return;
+    }
+
+    try {
+        const userUsecase = new UserUsecase(AppDataSource);
+        const user = await userUsecase.getUserById(Number(id));
+
+        if (user === null) {
+            res.status(404).send({ error: `User ${id} not found` });
+            return;
+        }
+
+        user.vip_status = vip_status;
+        const updatedUser = await userUsecase.updateUser(user.id, user);
+
+        res.status(200).send(updatedUser);
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({ error: "Internal server error" });
+    }
+});
+
+  app.patch("/users/:id/role", authenticateToken, authorizeAdminOrOwner, async (req: Request, res: Response) => {
     const { id } = req.params;
     const { role } = req.body;
 
@@ -148,7 +190,7 @@ app.patch("/users/:id",authenticateToken, async (req: Request, res: Response) =>
     }
 });
 
-  app.delete("/users/:id",authenticateToken, authorizeAdmin, async (req: Request, res: Response) => {
+  app.delete("/users/:id",authenticateToken, authorizeAdminOrOwner, async (req: Request, res: Response) => {
     const validation = deleteUserValidation.validate(req.params);
   
     if (validation.error) {

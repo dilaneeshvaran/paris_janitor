@@ -11,7 +11,7 @@ const OwnerDashboard: React.FC = () => {
     const [isUpdateModalOpen, setIsUpdateModalOpen] = useState<boolean>(false);
     const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
     const [availabilityDates, setAvailabilityDates] = useState<Date[]>([]);
-    const [isVipModalOpen, setIsVipModalOpen] = useState<boolean>(false); // State for VIP Status Modal
+    const [isVipModalOpen, setIsVipModalOpen] = useState<boolean>(false);
 
     useEffect(() => {
         const userId = localStorage.getItem('userId');

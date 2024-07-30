@@ -40,37 +40,55 @@ export class UserUsecase {
         };
     }
 
-    async getUserById(userId: number): Promise<User> {
-        const query = this.db.createQueryBuilder(User, "users");
-      
-        query.where("users.id = :id", { id: userId });
-      
-        const user = await query.getOne();
-      
-        if (!user) {
-            throw new Error('User not found');
+    async getUserById(userId: number): Promise<User | null> {
+        try {
+            const query = this.db.createQueryBuilder(User, "users");
+            query.where("users.id = :id", { id: userId });
+            const user = await query.getOne();
+            if (!user) {
+                console.warn(`User not found for ID: ${userId}`);
+                return null;
+            }
+            return user;
+        } catch (error) {
+            console.error(`Error fetching user by ID: ${userId}`, error);
+            return null;
         }
-      
-        return user;
     }
 
-    async getUserByEmail(email: string): Promise<User> {
-        const query = this.db.createQueryBuilder(User, "users");
-      
-        query.where("users.email = :email", { email });
-      
-        const user = await query.getOne();
-      
-        if (!user) {
-            throw new Error('User not found');
+    async isUserVip(userId: number): Promise<boolean> {
+        try {
+            const user = await this.getUserById(userId);
+            if (user === null) {
+                return false;
+            }
+            return user.vip_status === true;
+        } catch (error) {
+            console.error(`Error checking VIP status for user ID: ${userId}`, error);
+            return false;
         }
-      
-        return user;
+    }
+    
+
+    async getUserByEmail(email: string): Promise<User | null> {
+        try {
+            const query = this.db.createQueryBuilder(User, "users");
+            query.where("users.email = :email", { email });
+            const user = await query.getOne();
+            if (!user) {
+                console.warn(`User not found for email: ${email}`);
+                return null;
+            }
+            return user;
+        } catch (error) {
+            console.error(`Error fetching user by email: ${email}`, error);
+            return null;
+        }
     }
 
     async updateUser(
         id: number,
-        { firstname,lastname, email, password }: UpdateUserParams
+        { firstname, lastname, email, password, subscription_status, vip_status }: UpdateUserParams
     ): Promise<User | null> {
         const repo = this.db.getRepository(User);
         const userFound = await repo.findOneBy({ id });
@@ -92,11 +110,11 @@ export class UserUsecase {
         if (password) {
             userFound.password = await this.hashPassword(password);
         }
-        if(userFound.subscription_status){
-            userFound.subscription_status = true;
+        if (subscription_status !== undefined) {
+            userFound.subscription_status = subscription_status;
         }
-        if(userFound.vip_status){
-            userFound.vip_status = true;
+        if (vip_status !== undefined) {
+            userFound.vip_status = vip_status;
         }
         const userUpdate = await repo.save(userFound);
         return userUpdate;

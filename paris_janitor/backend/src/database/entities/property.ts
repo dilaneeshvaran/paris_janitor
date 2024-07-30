@@ -20,9 +20,6 @@ export class Property {
     @Column()
     owner_id: number;
 
-    @Column()
-    availabilityCalendar: string;
-
     @Column({ nullable: true })
     imageUrl?: string;
 
@@ -35,7 +32,6 @@ export class Property {
         address: string,
         price: number,
         owner_id: number,
-        availabilityCalendar: string,
         imageUrl?: string,
         verified: boolean = false
     ) {
@@ -44,7 +40,6 @@ export class Property {
         this.address = address;
         this.price = price;
         this.owner_id = owner_id;
-        this.availabilityCalendar = availabilityCalendar;
         this.imageUrl = imageUrl;
         this.verified = verified;
     }

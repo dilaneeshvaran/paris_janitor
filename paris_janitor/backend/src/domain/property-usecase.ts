@@ -90,9 +90,6 @@ export class PropertyUsecase {
         if (owner_id) {
             propertyFound.owner_id = owner_id;
         }
-        if (availabilityCalendar) {
-            propertyFound.availabilityCalendar = availabilityCalendar;
-        }
         if (imageUrl) {
             propertyFound.imageUrl = imageUrl;
         }

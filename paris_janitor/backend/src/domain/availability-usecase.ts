@@ -45,6 +45,26 @@ export class AvailabilityUsecase {
         return availability;
     }
 
+    async getAvailabilityByPropertyId(propertyId: number): Promise<Availability[]> {
+        try {
+            const query = this.db.createQueryBuilder(Availability, "availability")
+                .where("availability.property_id = :property_id", { property_id: propertyId });
+    
+            const availabilities = await query.getMany();
+    
+            if (!availabilities.length) {
+                console.warn(`No availabilities found for property ID: ${propertyId}`);
+            }
+    
+            return availabilities;
+        } catch (error) {
+            console.error("Error in getAvailabilityByPropertyId:", error);
+            throw error;
+        }
+    }
+    
+
+
     async updateAvailability(
         id: number,
         { property_id, start_date, end_date }: UpdateAvailabilityParams

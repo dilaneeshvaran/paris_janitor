@@ -1,18 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import '../styles/client.css';
 import Reserve from './Reserve';
+import Reservations from './Reservations';
+import EditProfile from './EditProfile';
 
 interface Property {
     id: number;
     name: string;
     description: string;
     price: number;
+    imageUrl: string;
 }
 
 const ClientDashboard: React.FC = () => {
     const [properties, setProperties] = useState<Property[]>([]);
     const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
+    const [showReservations, setShowReservations] = useState<boolean>(false);
+    const [showEditProfile, setShowEditProfile] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
+    const userId = localStorage.getItem('userId') || '';
 
     useEffect(() => {
         fetch('http://localhost:3000/properties/verified')
@@ -34,12 +40,15 @@ const ClientDashboard: React.FC = () => {
     return (
         <div className="client-dashboard">
             {error && <p className="error">{error}</p>}
+            <button onClick={() => setShowReservations(true)}>My Reservations</button>
+            <button onClick={() => setShowEditProfile(true)}>Edit Profile</button>
             <div className="properties-list">
                 {properties.length > 0 ? (
                     properties.map(property => (
                         <div key={property.id} className="property-item">
                             <h3>{property.name}</h3>
                             <p>{property.description}</p>
+                            <img className='img-reserve' src={property.imageUrl} alt={property.name} />
                             <button onClick={() => setSelectedProperty(property)}>Reserve</button>
                         </div>
                     ))
@@ -52,6 +61,18 @@ const ClientDashboard: React.FC = () => {
                     propertyId={selectedProperty.id}
                     price={selectedProperty.price}
                     onClose={() => setSelectedProperty(null)}
+                />
+            )}
+            {showReservations && (
+                <Reservations
+                    userId={userId}
+                    onClose={() => setShowReservations(false)}
+                />
+            )}
+            {showEditProfile && (
+                <EditProfile
+                    userId={userId}
+                    onClose={() => setShowEditProfile(false)}
                 />
             )}
         </div>

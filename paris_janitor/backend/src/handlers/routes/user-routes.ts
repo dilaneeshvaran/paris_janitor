@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
 import jwt from 'jsonwebtoken';
-import { authenticateToken, authorizeAdmin,authorizeAdminOrOwner } from '../middlewares/authMiddleware';
+import { authenticateToken, authorizeAdmin,authorizeAdminOrOwner,authorizeAll } from '../middlewares/authMiddleware';
 
 import {
   userValidation,
@@ -51,7 +51,7 @@ export const initUserRoutes = (app: express.Express) => {
     }
   });
 
-  app.get("/users/:userId",authenticateToken, authorizeAdminOrOwner, async (req: Request, res: Response) => {
+  app.get("/users/:userId",authenticateToken, authorizeAll, async (req: Request, res: Response) => {
     const { userId } = req.params;
   
     try {
@@ -69,7 +69,7 @@ export const initUserRoutes = (app: express.Express) => {
     }
   });
 
-  app.get("/users/vip/:userId", authenticateToken, authorizeAdminOrOwner, async (req: Request, res: Response) => {
+  app.get("/users/vip/:userId", authenticateToken, authorizeAll, async (req: Request, res: Response) => {
     const { userId } = req.params;
 
     try {
@@ -173,7 +173,7 @@ app.patch("/users/:id",authenticateToken, async (req: Request, res: Response) =>
     }
 });
 
-  app.patch("/users/:id/role", authenticateToken, authorizeAdminOrOwner, async (req: Request, res: Response) => {
+  app.patch("/users/:id/role", authenticateToken, authorizeAll, async (req: Request, res: Response) => {
     const { id } = req.params;
     const { role } = req.body;
 

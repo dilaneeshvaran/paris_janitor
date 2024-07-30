@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { authenticateToken, authorizeAdmin,authorizeAdminOrOwner } from '../middlewares/authMiddleware';
+import { authenticateToken, authorizeAdmin,authorizeAdminOrOwner ,authorizeAll} from '../middlewares/authMiddleware';
 import {
   createPropertyValidation,
   updatePropertyValidation,
@@ -92,7 +92,7 @@ app.get("/properties/owner/:ownerId", authenticateToken, authorizeAdminOrOwner, 
   }
 });
 
-  app.get("/properties/:propertyId", authenticateToken, authorizeAdminOrOwner, async (req: Request, res: Response) => {
+  app.get("/properties/:propertyId", authenticateToken, authorizeAll, async (req: Request, res: Response) => {
     const { propertyId } = req.params;
 
     try {

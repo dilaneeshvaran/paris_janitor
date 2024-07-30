@@ -162,9 +162,9 @@ const Reserve: React.FC<ReserveProps> = ({ propertyId, price, onClose }) => {
         }
     };
 
-
     const tileDisabled = ({ date }: { date: Date }) => {
-        return disabledDates.some(disabledDate => disabledDate.getTime() === date.getTime());
+        return disabledDates.some(disabledDate =>
+            disabledDate.toDateString() === date.toDateString());
     };
 
     return (

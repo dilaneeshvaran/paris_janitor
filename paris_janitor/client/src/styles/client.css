@@ -8,3 +8,10 @@
   box-sizing: border-box;
   
 }
+.img-reserve {
+  width: 200px;
+  height: 150px; 
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}

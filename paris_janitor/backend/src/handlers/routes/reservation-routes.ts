@@ -59,6 +59,24 @@ export const initReservationRoutes = (app: express.Express) => {
     }
   });
 
+  app.get("/reservations/user/:userId", authenticateToken, authorizeAll, async (req: Request, res: Response) => {
+    const { userId } = req.params;
+
+    try {
+        const reservationUsecase = new ReservationUsecase(AppDataSource);
+        const reservations = await reservationUsecase.getReservationByUserId(Number(userId));
+
+        if (reservations.length > 0) {
+            res.status(200).send(reservations);
+        } else {
+            res.status(200).send({ message: "No reservations found for this user" });
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({ error: "Internal server error" });
+    }
+});
+
   app.post("/reservations", authenticateToken, authorizeAll, async (req: Request, res: Response) => {
     const validation = createReservationValidation.validate(req.body);
 

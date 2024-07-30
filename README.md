@@ -1,10 +1,10 @@
 //Bailleur
 //manage profile
-//see reservations, cancel (send mail)
-//info sur le propriété (etat maintenance etc)
+//info sur le propriété (etat maintenance:services etc)
 //recap finance revenu (reservation pour le mois+total)
 //see facture (vip status)
 //devis temps réel
+
 
 
 //Backoffice

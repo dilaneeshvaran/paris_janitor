@@ -20,8 +20,8 @@ export class Service {
     @Column()
     reservation_id: number;
 
-    @Column()
-    status: "pending" | "completed" | "accepted" | "cancelled" = "pending";
+    @Column({ default: "pending" })
+    status: "pending" | "completed" | "accepted" | "cancelled";
 
     constructor(
         description: string,

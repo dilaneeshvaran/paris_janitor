@@ -77,6 +77,24 @@ export const initReservationRoutes = (app: express.Express) => {
     }
 });
 
+app.get("/reservations/property/:propertyId", authenticateToken, authorizeAll, async (req: Request, res: Response) => {
+  const { propertyId } = req.params;
+
+  try {
+      const reservationUsecase = new ReservationUsecase(AppDataSource);
+      const reservations = await reservationUsecase.getReservationByPropertyId(Number(propertyId));
+
+      if (reservations.length > 0) {
+          res.status(200).send(reservations);
+      } else {
+          res.status(200).send({ message: "No reservations found for this property" });
+      }
+  } catch (error) {
+      console.log(error);
+      res.status(500).send({ error: "Internal server error" });
+  }
+});
+
   app.post("/reservations", authenticateToken, authorizeAll, async (req: Request, res: Response) => {
     const validation = createReservationValidation.validate(req.body);
 

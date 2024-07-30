@@ -4,7 +4,7 @@ import 'jspdf-autotable';
 import axios from 'axios';
 import '../styles/reservations.css';
 
-interface Reservation {
+export interface Reservation {
     id: number;
     property_id: number;
     client_id: number;

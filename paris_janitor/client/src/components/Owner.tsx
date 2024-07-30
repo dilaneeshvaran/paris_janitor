@@ -3,6 +3,7 @@ import axios from 'axios';
 import PropertyList from './PropertyList';
 import PropertyModal from './PropertyModal';
 import VipStatusModal from './VipStatusModal'; // Import the VIP Status Modal
+import ReservationModal from './ReservationModal'; // Import the Reservation Modal
 import { Property } from './types';
 
 const OwnerDashboard: React.FC = () => {
@@ -12,6 +13,8 @@ const OwnerDashboard: React.FC = () => {
     const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
     const [availabilityDates, setAvailabilityDates] = useState<Date[]>([]);
     const [isVipModalOpen, setIsVipModalOpen] = useState<boolean>(false);
+    const [isReservationModalOpen, setIsReservationModalOpen] = useState<boolean>(false);
+    const [viewingPropertyId, setViewingPropertyId] = useState<number | null>(null);
 
     useEffect(() => {
         const userId = localStorage.getItem('userId');
@@ -57,12 +60,13 @@ const OwnerDashboard: React.FC = () => {
     };
 
     const handleViewReservations = (id: number) => {
-        console.log(`View reservations for room ID: ${id}`);
+        setViewingPropertyId(id);
+        setIsReservationModalOpen(true);
     };
 
     return (
         <div>
-            <div >
+            <div>
                 <button onClick={() => setIsVipModalOpen(true)}>Check VIP Status</button>
             </div>
             <button onClick={() => setIsCreateModalOpen(true)}>Ajouter</button>
@@ -97,6 +101,13 @@ const OwnerDashboard: React.FC = () => {
                     isOpen={isVipModalOpen}
                     onRequestClose={() => setIsVipModalOpen(false)}
                     userId={parseInt(localStorage.getItem('userId') || '0', 10)}
+                />
+            )}
+            {isReservationModalOpen && viewingPropertyId !== null && (
+                <ReservationModal
+                    isOpen={isReservationModalOpen}
+                    onClose={() => setIsReservationModalOpen(false)}
+                    propertyId={viewingPropertyId}
                 />
             )}
         </div>

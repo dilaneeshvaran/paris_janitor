@@ -58,6 +58,15 @@ export class ReservationUsecase {
         return reservations;
     }
 
+    async getReservationByPropertyId(propertyId: number): Promise<Reservation[]> {
+        const query = this.db.createQueryBuilder(Reservation, "reservations")
+            .where("reservations.property_id = :id", { id: propertyId });
+    
+        const reservations = await query.getMany();
+    
+        return reservations;
+    }
+
     async updateReservation(
         id: number,
         { property_id, client_id, traveler_id, startDate, endDate, status }: UpdateReservationParams

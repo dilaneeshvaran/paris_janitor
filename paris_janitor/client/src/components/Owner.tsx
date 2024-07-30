@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import PropertyList from './PropertyList';
 import PropertyModal from './PropertyModal';
+import VipStatusModal from './VipStatusModal'; // Import the VIP Status Modal
 import { Property } from './types';
 
 const OwnerDashboard: React.FC = () => {
@@ -10,6 +11,7 @@ const OwnerDashboard: React.FC = () => {
     const [isUpdateModalOpen, setIsUpdateModalOpen] = useState<boolean>(false);
     const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
     const [availabilityDates, setAvailabilityDates] = useState<Date[]>([]);
+    const [isVipModalOpen, setIsVipModalOpen] = useState<boolean>(false); // State for VIP Status Modal
 
     useEffect(() => {
         const userId = localStorage.getItem('userId');
@@ -60,6 +62,9 @@ const OwnerDashboard: React.FC = () => {
 
     return (
         <div>
+            <div >
+                <button onClick={() => setIsVipModalOpen(true)}>Check VIP Status</button>
+            </div>
             <button onClick={() => setIsCreateModalOpen(true)}>Ajouter</button>
             <h3>Propriétés</h3>
             <PropertyList
@@ -85,6 +90,13 @@ const OwnerDashboard: React.FC = () => {
                     setProperties={setProperties}
                     availabilityDates={availabilityDates}
                     setAvailabilityDates={setAvailabilityDates}
+                />
+            )}
+            {isVipModalOpen && (
+                <VipStatusModal
+                    isOpen={isVipModalOpen}
+                    onRequestClose={() => setIsVipModalOpen(false)}
+                    userId={parseInt(localStorage.getItem('userId') || '0', 10)}
                 />
             )}
         </div>

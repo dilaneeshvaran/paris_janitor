@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import AvailabilityPicker from './AvailabilityPicker';
 import { Property } from './types';
@@ -144,6 +145,7 @@ const PropertyModal: React.FC<PropertyModalProps> = ({ isOpen, onClose, property
                 setProperties(prevProperties => [...prevProperties, response.data]);
             }
             onClose();
+            setAvailabilityDates([]);
         } catch (error) {
             console.error('Error saving property:', error);
         }
@@ -202,11 +204,16 @@ const PropertyModal: React.FC<PropertyModalProps> = ({ isOpen, onClose, property
                         onChange={handleFileChange}
                         accept="image/*"
                     />
-                    <AvailabilityPicker
-                        availabilityDates={availabilityDates}
-                        setAvailabilityDates={setAvailabilityDates}
-                    />
-                    <button onClick={handleSubmit}>{property ? 'Update' : 'Create'}</button>
+                    <div>
+                        <label>Unavailability Dates:</label>
+                        <AvailabilityPicker
+                            availabilityDates={availabilityDates}
+                            setAvailabilityDates={setAvailabilityDates}
+                        />
+                    </div>
+                    <button onClick={handleSubmit}>
+                        {property ? 'Update' : 'Create'}
+                    </button>
                 </div>
             </div>
         )

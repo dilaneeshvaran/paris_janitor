@@ -8,21 +8,38 @@ interface AvailabilityPickerProps {
 }
 
 const AvailabilityPicker: React.FC<AvailabilityPickerProps> = ({ availabilityDates, setAvailabilityDates }) => {
+
+    const handleDateChange = (date: Date | null) => {
+        if (!date) return;
+
+        const dateString = date.toDateString();
+        if (availabilityDates.some(d => d.toDateString() === dateString)) {
+            setAvailabilityDates(availabilityDates.filter(d => d.toDateString() !== dateString));
+        } else {
+            setAvailabilityDates([...availabilityDates, date]);
+        }
+    };
+
     return (
         <div>
-            <label>unavailability Dates:</label>
+            <label>Unavailability Dates:</label>
             <DatePicker
                 selected={null}
-                onChange={date => {
-                    if (date && !availabilityDates.some(d => d.toDateString() === date.toDateString())) {
-                        setAvailabilityDates([...availabilityDates, date]);
-                    }
-                }}
+                onChange={handleDateChange}
                 inline
+                highlightDates={availabilityDates}
             />
             <div>
                 {availabilityDates.map((date, index) => (
-                    <span key={index} style={{ marginRight: '5px' }}>{date.toDateString()}</span>
+                    <span key={index} style={{ marginRight: '5px', display: 'inline-block' }}>
+                        {date.toDateString()}
+                        <button
+                            onClick={() => setAvailabilityDates(availabilityDates.filter((_, i) => i !== index))}
+                            style={{ marginLeft: '5px', cursor: 'pointer' }}
+                        >
+                            X
+                        </button>
+                    </span>
                 ))}
             </div>
         </div>

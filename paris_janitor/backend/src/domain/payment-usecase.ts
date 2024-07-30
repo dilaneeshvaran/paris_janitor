@@ -28,7 +28,7 @@ export class PaymentUsecase {
       ],
       mode: 'payment',
       success_url: 'http://localhost:5173/success',
-      cancel_url: 'http://localhost:5173/cancel',
+      cancel_url: 'http://localhost:5173/dashboard/owner',
       metadata: { userId: userId.toString() },
     });
 

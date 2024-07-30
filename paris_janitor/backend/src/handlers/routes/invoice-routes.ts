@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { authenticateToken, authorizeAdmin } from '../middlewares/authMiddleware';
+import { authenticateToken, authorizeAdmin,authorizeAdminOrOwner } from '../middlewares/authMiddleware';
 import {
   createInvoiceValidation,
   updateInvoiceValidation,
@@ -12,7 +12,7 @@ import { InvoiceUsecase } from "../../domain/invoice-usecase";
 import { Invoice } from "../../database/entities/invoice";
 
 export const initInvoiceRoutes = (app: express.Express) => {
-  app.get("/invoices", authenticateToken, authorizeAdmin, async (req: Request, res: Response) => {
+  app.get("/invoices", authenticateToken, authorizeAdminOrOwner, async (req: Request, res: Response) => {
     const validation = listInvoiceValidation.validate(req.query);
 
     if (validation.error) {
@@ -41,7 +41,7 @@ export const initInvoiceRoutes = (app: express.Express) => {
     }
   });
 
-  app.get("/invoices/:invoiceId", authenticateToken, authorizeAdmin, async (req: Request, res: Response) => {
+  app.get("/invoices/:invoiceId", authenticateToken, authorizeAdminOrOwner, async (req: Request, res: Response) => {
     const { invoiceId } = req.params;
 
     try {
@@ -59,7 +59,25 @@ export const initInvoiceRoutes = (app: express.Express) => {
     }
   });
 
-  app.post("/invoices", authenticateToken, authorizeAdmin, async (req: Request, res: Response) => {
+  app.get("/invoices/user/:userId", authenticateToken, authorizeAdminOrOwner, async (req: Request, res: Response) => {
+    const { userId } = req.params;
+
+    try {
+        const invoiceUsecase = new InvoiceUsecase(AppDataSource);
+        const invoices = await invoiceUsecase.getInvoiceByUserId(Number(userId));
+
+        if (invoices.length > 0) {
+            res.status(200).send(invoices);
+        } else {
+            res.status(404).send({ error: "No invoices found for this user" });
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({ error: "Internal server error" });
+    }
+});
+
+  app.post("/invoices", authenticateToken, authorizeAdminOrOwner, async (req: Request, res: Response) => {
     const validation = createInvoiceValidation.validate(req.body);
 
     if (validation.error) {
@@ -79,7 +97,7 @@ export const initInvoiceRoutes = (app: express.Express) => {
     }
   });
 
-  app.patch("/invoices/:id", authenticateToken, authorizeAdmin, async (req: Request, res: Response) => {
+  app.patch("/invoices/:id", authenticateToken, authorizeAdminOrOwner, async (req: Request, res: Response) => {
     const validation = updateInvoiceValidation.validate({
       ...req.params,
       ...req.body,
@@ -109,7 +127,7 @@ export const initInvoiceRoutes = (app: express.Express) => {
     }
   });
 
-  app.delete("/invoices/:id", authenticateToken, authorizeAdmin, async (req: Request, res: Response) => {
+  app.delete("/invoices/:id", authenticateToken, authorizeAdminOrOwner, async (req: Request, res: Response) => {
     const validation = deleteInvoiceValidation.validate(req.params);
 
     if (validation.error) {

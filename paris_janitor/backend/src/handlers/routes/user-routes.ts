@@ -159,15 +159,12 @@ app.patch("/users/:id",authenticateToken, async (req: Request, res: Response) =>
 
     try {
         const userUsecase = new UserUsecase(AppDataSource);
-        const user = await userUsecase.getUserById(Number(id));
+        const updatedUser = await userUsecase.updateVipStatus(Number(id), vip_status);
 
-        if (user === null) {
+        if (updatedUser === null) {
             res.status(404).send({ error: `User ${id} not found` });
             return;
         }
-
-        user.vip_status = vip_status;
-        const updatedUser = await userUsecase.updateUser(user.id, user);
 
         res.status(200).send(updatedUser);
     } catch (error) {
@@ -190,7 +187,7 @@ app.patch("/users/:id",authenticateToken, async (req: Request, res: Response) =>
     }
 });
 
-  app.delete("/users/:id",authenticateToken, authorizeAdminOrOwner, async (req: Request, res: Response) => {
+  app.delete("/users/:id",authenticateToken, authorizeAdmin, async (req: Request, res: Response) => {
     const validation = deleteUserValidation.validate(req.params);
   
     if (validation.error) {

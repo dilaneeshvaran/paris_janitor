@@ -44,6 +44,21 @@ export class InvoiceUsecase {
       
         return invoice;
     }
+    async getInvoiceByUserId(clientId: number): Promise<Invoice[]> {
+        const query = this.db.createQueryBuilder(Invoice, "invoices");
+        
+        query.where("invoices.client_id = :clientId", { clientId });
+        
+        const invoices = await query.getMany();
+        
+        if (invoices.length === 0) {
+            throw new Error('No invoices found for this user');
+        }
+        
+        return invoices;
+    }
+
+
 
     async updateInvoice(
         id: number,

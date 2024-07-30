@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import '../styles/login.css';
 
+
 const Login: React.FC = () => {
     const { userType } = useParams<{ userType: string }>();
     const navigate = useNavigate();
@@ -60,6 +61,16 @@ const Login: React.FC = () => {
         }
     };
 
+    const handleRegisterClick = () => {
+        let role = '';
+        if (userType === 'client') {
+            role = 'guest';
+        } else if (userType === 'owner') {
+            role = 'client';
+        }
+        navigate('/register', { state: { role } });
+    };
+
     return (
         <div className="center-content">
             <div>
@@ -78,6 +89,7 @@ const Login: React.FC = () => {
                     onChange={(e) => setPassword(e.target.value)}
                 />
                 <button onClick={handleLogin}>Login</button>
+                <button onClick={handleRegisterClick}>Register</button>
             </div>
         </div>
     );

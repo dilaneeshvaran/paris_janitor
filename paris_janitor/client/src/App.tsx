@@ -8,6 +8,7 @@ import ClientDashboard from './components/Client';
 import { AuthProvider } from './components/AuthContext';
 import './App.css';
 import PaymentSuccess from './components/PaymentSuccess';
+import Register from './components/Register';
 
 const App: React.FC = () => {
   return (
@@ -20,6 +21,7 @@ const App: React.FC = () => {
           <Route path="/dashboard/owner" element={<OwnerDashboard />} />
           <Route path="/dashboard/client" element={<ClientDashboard />} />
           <Route path="/success" element={<PaymentSuccess />} />
+          <Route path="/register" element={<Register />} />
         </Routes>
       </Router>
     </AuthProvider>

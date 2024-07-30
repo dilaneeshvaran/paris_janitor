@@ -91,7 +91,14 @@ const VipStatusModal: React.FC<VipStatusModalProps> = ({ isOpen, onRequestClose,
 
     const fetchPaymentHistory = async () => {
         try {
-            const response = await axios.get(`/api/user/${userId}/payments`);
+            const token = localStorage.getItem('token');
+            const response = await axios.get(`http://localhost:3000/invoices/user/${userId}`, {
+
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+
+            });
             setPaymentHistory(response.data);
         } catch (error) {
             console.error('Error fetching payment history:', error);
@@ -129,12 +136,15 @@ const VipStatusModal: React.FC<VipStatusModalProps> = ({ isOpen, onRequestClose,
                     <ul>
                         {paymentHistory.map((payment, index) => (
                             <li key={index}>
-                                {new Date(payment.date).toLocaleDateString()}: ${payment.amount / 100}
+                                {new Date(payment.date).toLocaleDateString()}: ${payment.amount}
                             </li>
                         ))}
                     </ul>
                 </div>
             )}
+            <button onClick={onRequestClose}>
+                Return
+            </button>
         </Modal>
     );
 };

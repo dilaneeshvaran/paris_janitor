@@ -2,8 +2,8 @@ import Joi from "joi";
 
 export interface CreateReservationValidation {
   property_id: number;
-  client_id: number;
-  traveler_id: number;
+  client_id?: number;
+  traveler_id?: number;
   startDate: string;
   endDate: string;
   status: string;
@@ -11,8 +11,8 @@ export interface CreateReservationValidation {
 
 export const createReservationValidation = Joi.object<CreateReservationValidation>({
   property_id: Joi.number().required(),
-  client_id: Joi.number().required(),
-  traveler_id: Joi.number().required(),
+  client_id: Joi.number().optional(),
+  traveler_id: Joi.number().optional(),
   startDate: Joi.string().isoDate().required(),
   endDate: Joi.string().isoDate().required(),
   status: Joi.string().required(),

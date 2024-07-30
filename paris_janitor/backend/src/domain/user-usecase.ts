@@ -92,7 +92,7 @@ export class UserUsecase {
     ): Promise<User | null> {
         const repo = this.db.getRepository(User);
         const userFound = await repo.findOneBy({ id });
-        if (userFound === null) return null;
+        if (!userFound) return null;
     
         if (email) {
             const emailExists = await this.isEmailExists(email);
@@ -101,24 +101,47 @@ export class UserUsecase {
             }
             userFound.email = email;
         }
+    
         if (firstname) {
             userFound.firstname = firstname;
         }
+    
         if (lastname) {
             userFound.lastname = lastname;
         }
-        if (password) {
+    
+        // Only hash and update password if a new password is provided
+        if (typeof password === 'string' && password.length > 0) {
+            console.log("iiiiiiiiiiiiiiiiiiiii");
             userFound.password = await this.hashPassword(password);
         }
+    
         if (subscription_status !== undefined) {
             userFound.subscription_status = subscription_status;
         }
+    
         if (vip_status !== undefined) {
             userFound.vip_status = vip_status;
         }
+    
         const userUpdate = await repo.save(userFound);
         return userUpdate;
     }
+
+    async updateVipStatus(id: number, vip_status: boolean): Promise<User | null> {
+        const repo = this.db.getRepository(User);
+        const userFound = await repo.findOneBy({ id });
+    
+        if (!userFound) return null;
+    
+        if (vip_status !== undefined) {
+            userFound.vip_status = vip_status;
+        }
+        const updatedUser = await repo.save(userFound);
+        return updatedUser;
+    }
+    
+    
 
     async deleteUser(id: number): Promise<User | null> {
         const repo = this.db.getRepository(User);

@@ -80,6 +80,17 @@ export class ServiceUsecase {
         return properties;
     }
 
+    async getServiceByPropertyId(propertyId: number): Promise<Service[]> {
+        const query = this.db.createQueryBuilder(Service, "service")
+            .innerJoin("reservation", "reservation", "service.reservation_id = reservation.id")
+            .innerJoin("property", "property", "reservation.property_id = property.id")
+            .where("property.id = :id", { id: propertyId });
+    
+        const services = await query.getMany();
+    
+        return services;
+    }
+
     async updateService(
         id: number,
         { description, price, provider_id, service_type, reservation_id,status }: UpdateServiceParams

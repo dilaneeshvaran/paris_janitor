@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import axios from 'axios';
 import { loadStripe } from '@stripe/stripe-js';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 Modal.setAppElement('#root');
 const stripePromise = loadStripe('pk_test_51PScAqGc0PhuZBe9Uqm7XP3iXPKio8QNqbt4iNfSINUE06VzAPldOUwEgVn94rLLmQKd8STxK6fj12YKwBeiMRbS00DCyPSNGY');
@@ -13,6 +15,7 @@ interface VipStatusModalProps {
 }
 
 interface PaymentHistory {
+    id: string;
     date: string;
     amount: number;
 }
@@ -40,11 +43,6 @@ const VipStatusModal: React.FC<VipStatusModalProps> = ({ isOpen, onRequestClose,
 
         checkVipStatus();
     }, [userId]);
-
-
-    console.log("::::::::vipstatus", vipStatus);
-    console.log("::::::::userid", userId);
-
 
     const handlePayment = async () => {
         try {
@@ -88,16 +86,13 @@ const VipStatusModal: React.FC<VipStatusModalProps> = ({ isOpen, onRequestClose,
         }
     };
 
-
     const fetchPaymentHistory = async () => {
         try {
             const token = localStorage.getItem('token');
             const response = await axios.get(`http://localhost:3000/invoices/user/${userId}`, {
-
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
-
             });
             setPaymentHistory(response.data);
         } catch (error) {
@@ -108,6 +103,19 @@ const VipStatusModal: React.FC<VipStatusModalProps> = ({ isOpen, onRequestClose,
     const toggleHistory = () => {
         setShowHistory(!showHistory);
         if (!showHistory) fetchPaymentHistory();
+    };
+
+    const generatePDF = (payment: PaymentHistory) => {
+        const doc = new jsPDF();
+        doc.text('Facture', 20, 20);
+        (doc as any).autoTable({
+            startY: 30,
+            head: [['Date', 'Amount']],
+            body: [
+                [new Date(payment.date).toLocaleDateString(), `$${payment.amount}`],
+            ],
+        });
+        doc.save(`facture_${payment.id}.pdf`);
     };
 
     return (
@@ -137,6 +145,7 @@ const VipStatusModal: React.FC<VipStatusModalProps> = ({ isOpen, onRequestClose,
                         {paymentHistory.map((payment, index) => (
                             <li key={index}>
                                 {new Date(payment.date).toLocaleDateString()}: ${payment.amount}
+                                <button onClick={() => generatePDF(payment)}>Download Facture</button>
                             </li>
                         ))}
                     </ul>

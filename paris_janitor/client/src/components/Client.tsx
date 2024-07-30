@@ -4,7 +4,7 @@ import Reserve from './Reserve';
 import Reservations from './Reservations';
 import EditProfile from './EditProfile';
 import VipStatusModal from './VipStatusModal';
-import Services from './Services'; // Import the Services component
+import Services from './Services';
 
 interface Property {
     id: number;
@@ -20,7 +20,7 @@ const ClientDashboard: React.FC = () => {
     const [showReservations, setShowReservations] = useState<boolean>(false);
     const [showEditProfile, setShowEditProfile] = useState<boolean>(false);
     const [isVipModalOpen, setIsVipModalOpen] = useState<boolean>(false);
-    const [showServices, setShowServices] = useState<boolean>(false); // State for services modal
+    const [showServices, setShowServices] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
     const userId = localStorage.getItem('userId') || '';
 
@@ -47,7 +47,7 @@ const ClientDashboard: React.FC = () => {
             <button onClick={() => setShowReservations(true)}>My Reservations</button>
             <button onClick={() => setShowEditProfile(true)}>Edit Profile</button>
             <button onClick={() => setIsVipModalOpen(true)}>Check VIP Status</button>
-            <button onClick={() => setShowServices(true)}>View Services</button> {/* Button to show services */}
+            <button onClick={() => setShowServices(true)}>View Services</button>
             <div className="properties-list">
                 {properties.length > 0 ? (
                     properties.map(property => (

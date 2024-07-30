@@ -7,9 +7,10 @@ interface PropertyListProps {
     onModifyRoom: (property: Property) => void;
     onDeleteRoom: (id: number) => void;
     onViewReservations: (id: number) => void;
+    onViewState: (id: number) => void; // New prop
 }
 
-const PropertyList: React.FC<PropertyListProps> = ({ properties, onModifyRoom, onDeleteRoom, onViewReservations }) => {
+const PropertyList: React.FC<PropertyListProps> = ({ properties, onModifyRoom, onDeleteRoom, onViewReservations, onViewState }) => {
     return (
         <ul>
             {properties.length === 0 ? (
@@ -22,6 +23,7 @@ const PropertyList: React.FC<PropertyListProps> = ({ properties, onModifyRoom, o
                         onModifyRoom={onModifyRoom}
                         onDeleteRoom={onDeleteRoom}
                         onViewReservations={onViewReservations}
+                        onViewState={onViewState}
                     />
                 ))
             )}

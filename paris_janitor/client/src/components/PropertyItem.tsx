@@ -6,9 +6,10 @@ interface PropertyItemProps {
     onModifyRoom: (property: Property) => void;
     onDeleteRoom: (id: number) => void;
     onViewReservations: (id: number) => void;
+    onViewState: (id: number) => void; // New prop
 }
 
-const PropertyItem: React.FC<PropertyItemProps> = ({ property, onModifyRoom, onDeleteRoom, onViewReservations }) => {
+const PropertyItem: React.FC<PropertyItemProps> = ({ property, onModifyRoom, onDeleteRoom, onViewReservations, onViewState }) => {
     return (
         <li style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
             <img src={property.imageUrl} alt={property.name} style={{ width: '50px', height: '50px', marginRight: '10px' }} />
@@ -20,7 +21,8 @@ const PropertyItem: React.FC<PropertyItemProps> = ({ property, onModifyRoom, onD
             </div>
             <button onClick={() => onModifyRoom(property)} style={{ marginRight: '5px' }}>Modify</button>
             <button onClick={() => onDeleteRoom(property.id)} style={{ marginRight: '5px' }}>Delete</button>
-            <button onClick={() => onViewReservations(property.id)}>View Reservations</button>
+            <button onClick={() => onViewReservations(property.id)} style={{ marginRight: '5px' }}>View Reservations</button>
+            <button onClick={() => onViewState(property.id)}>View State</button> {/* New button */}
         </li>
     );
 };

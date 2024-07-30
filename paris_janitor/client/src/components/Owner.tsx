@@ -4,6 +4,8 @@ import PropertyList from './PropertyList';
 import PropertyModal from './PropertyModal';
 import VipStatusModal from './VipStatusModal'; // Import the VIP Status Modal
 import ReservationModal from './ReservationModal'; // Import the Reservation Modal
+import EditProfile from './EditProfile'; // Import the EditProfile component
+import PropertyStateModal from './PropertyStateModal'; // Import the PropertyStateModal
 import { Property } from './types';
 
 const OwnerDashboard: React.FC = () => {
@@ -15,6 +17,9 @@ const OwnerDashboard: React.FC = () => {
     const [isVipModalOpen, setIsVipModalOpen] = useState<boolean>(false);
     const [isReservationModalOpen, setIsReservationModalOpen] = useState<boolean>(false);
     const [viewingPropertyId, setViewingPropertyId] = useState<number | null>(null);
+    const [isEditProfileModalOpen, setIsEditProfileModalOpen] = useState<boolean>(false); // State for EditProfile modal
+    const [isStateModalOpen, setIsStateModalOpen] = useState<boolean>(false); // State for PropertyStateModal
+    const [viewingStatePropertyId, setViewingStatePropertyId] = useState<number | null>(null); // ID for PropertyStateModal
 
     useEffect(() => {
         const userId = localStorage.getItem('userId');
@@ -64,10 +69,20 @@ const OwnerDashboard: React.FC = () => {
         setIsReservationModalOpen(true);
     };
 
+    const handleViewState = (id: number) => {
+        setViewingStatePropertyId(id);
+        setIsStateModalOpen(true);
+    };
+
+    const handleEditProfile = () => {
+        setIsEditProfileModalOpen(true);
+    };
+
     return (
         <div>
             <div>
                 <button onClick={() => setIsVipModalOpen(true)}>Check VIP Status</button>
+                <button onClick={handleEditProfile}>Edit Profile</button>
             </div>
             <button onClick={() => setIsCreateModalOpen(true)}>Ajouter</button>
             <h3>Propriétés</h3>
@@ -76,6 +91,7 @@ const OwnerDashboard: React.FC = () => {
                 onModifyRoom={handleModifyRoom}
                 onDeleteRoom={handleDeleteRoom}
                 onViewReservations={handleViewReservations}
+                onViewState={handleViewState} // Pass the new handler
             />
             {isCreateModalOpen && (
                 <PropertyModal
@@ -108,6 +124,19 @@ const OwnerDashboard: React.FC = () => {
                     isOpen={isReservationModalOpen}
                     onClose={() => setIsReservationModalOpen(false)}
                     propertyId={viewingPropertyId}
+                />
+            )}
+            {isStateModalOpen && viewingStatePropertyId !== null && (
+                <PropertyStateModal
+                    isOpen={isStateModalOpen}
+                    onRequestClose={() => setIsStateModalOpen(false)}
+                    propertyId={viewingStatePropertyId}
+                />
+            )}
+            {isEditProfileModalOpen && (
+                <EditProfile
+                    userId={localStorage.getItem('userId') || ''}
+                    onClose={() => setIsEditProfileModalOpen(false)}
                 />
             )}
         </div>

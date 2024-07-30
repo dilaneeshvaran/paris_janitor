@@ -101,6 +101,21 @@ export const initServiceRoutes = (app: express.Express) => {
         }
     });
 
+
+    app.get("/services/property/:propertyId", authenticateToken, authorizeAll, async (req: Request, res: Response) => {
+        const { propertyId } = req.params;
+    
+        try {
+            const serviceUsecase = new ServiceUsecase(AppDataSource);
+            const services = await serviceUsecase.getServiceByPropertyId(Number(propertyId));
+    
+            res.status(200).send(services);
+        } catch (error) {
+            console.error("Error fetching services by property ID:", error);
+            res.status(500).send({ error: "Internal server error" });
+        }
+    });
+
     app.post("/services", authenticateToken, authorizeAll, async (req: Request, res: Response) => {
         const validation = createServiceValidation.validate(req.body);
 

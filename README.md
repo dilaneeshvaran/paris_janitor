@@ -1,10 +1,6 @@
 //Bailleur
-//manage profile
-//info sur le propriété (etat maintenance:services etc)
 //recap finance revenu (reservation pour le mois+total)
-//see facture (vip status)
 //devis temps réel
-
 
 
 //Backoffice

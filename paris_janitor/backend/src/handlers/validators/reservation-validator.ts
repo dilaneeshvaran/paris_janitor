@@ -6,7 +6,7 @@ export interface CreateReservationValidation {
   traveler_id?: number;
   startDate: string;
   endDate: string;
-  status: string;
+  status?: string;
 }
 
 export const createReservationValidation = Joi.object<CreateReservationValidation>({
@@ -15,7 +15,7 @@ export const createReservationValidation = Joi.object<CreateReservationValidatio
   traveler_id: Joi.number().optional(),
   startDate: Joi.string().isoDate().required(),
   endDate: Joi.string().isoDate().required(),
-  status: Joi.string().required(),
+  status: Joi.string().optional(),
 });
 
 export interface UpdateReservationValidation {

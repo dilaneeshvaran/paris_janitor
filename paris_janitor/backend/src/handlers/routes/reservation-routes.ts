@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { authenticateToken, authorizeAdmin } from '../middlewares/authMiddleware';
+import { authenticateToken, authorizeAdmin,authorizeAll } from '../middlewares/authMiddleware';
 import {
   createReservationValidation,
   updateReservationValidation,
@@ -12,7 +12,7 @@ import { ReservationUsecase } from "../../domain/reservation-usecase";
 import { Reservation } from "../../database/entities/reservation";
 
 export const initReservationRoutes = (app: express.Express) => {
-  app.get("/reservations", authenticateToken, authorizeAdmin, async (req: Request, res: Response) => {
+  app.get("/reservations", authenticateToken, authorizeAll, async (req: Request, res: Response) => {
     const validation = listReservationValidation.validate(req.query);
 
     if (validation.error) {
@@ -41,7 +41,7 @@ export const initReservationRoutes = (app: express.Express) => {
     }
   });
 
-  app.get("/reservations/:reservationId", authenticateToken, authorizeAdmin, async (req: Request, res: Response) => {
+  app.get("/reservations/:reservationId", authenticateToken, authorizeAll, async (req: Request, res: Response) => {
     const { reservationId } = req.params;
 
     try {
@@ -59,7 +59,7 @@ export const initReservationRoutes = (app: express.Express) => {
     }
   });
 
-  app.post("/reservations", authenticateToken, authorizeAdmin, async (req: Request, res: Response) => {
+  app.post("/reservations", authenticateToken, authorizeAll, async (req: Request, res: Response) => {
     const validation = createReservationValidation.validate(req.body);
 
     if (validation.error) {
@@ -79,7 +79,7 @@ export const initReservationRoutes = (app: express.Express) => {
     }
   });
 
-  app.patch("/reservations/:id", authenticateToken, authorizeAdmin, async (req: Request, res: Response) => {
+  app.patch("/reservations/:id", authenticateToken, authorizeAll, async (req: Request, res: Response) => {
     const validation = updateReservationValidation.validate({
       ...req.params,
       ...req.body,
@@ -109,7 +109,7 @@ export const initReservationRoutes = (app: express.Express) => {
     }
   });
 
-  app.delete("/reservations/:id", authenticateToken, authorizeAdmin, async (req: Request, res: Response) => {
+  app.delete("/reservations/:id", authenticateToken, authorizeAll, async (req: Request, res: Response) => {
     const validation = deleteReservationValidation.validate(req.params);
 
     if (validation.error) {

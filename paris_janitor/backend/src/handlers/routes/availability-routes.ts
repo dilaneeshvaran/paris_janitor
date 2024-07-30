@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { authenticateToken, authorizeAdmin ,authorizeAdminOrOwner} from '../middlewares/authMiddleware';
+import { authenticateToken, authorizeAdmin ,authorizeAdminOrOwner,authorizeAll} from '../middlewares/authMiddleware';
 import {
     createAvailabilityValidation,
     updateAvailabilityValidation,
@@ -12,7 +12,7 @@ import { AvailabilityUsecase } from "../../domain/availability-usecase";
 import { Availability } from "../../database/entities/availability";
 
 export const initAvailabilityRoutes = (app: express.Express) => {
-    app.get("/availability", authenticateToken, authorizeAdminOrOwner, async (req: Request, res: Response) => {
+    app.get("/availability", authenticateToken, authorizeAll, async (req: Request, res: Response) => {
         const validation = listAvailabilityValidation.validate(req.query);
 
         if (validation.error) {
@@ -41,7 +41,7 @@ export const initAvailabilityRoutes = (app: express.Express) => {
         }
     });
 
-    app.get("/availability/:availabilityId", authenticateToken, authorizeAdminOrOwner, async (req: Request, res: Response) => {
+    app.get("/availability/:availabilityId", authenticateToken, authorizeAll, async (req: Request, res: Response) => {
         const { availabilityId } = req.params;
 
         try {
@@ -59,7 +59,7 @@ export const initAvailabilityRoutes = (app: express.Express) => {
         }
     });
 
-    app.get("/availability/property/:propertyId", authenticateToken, authorizeAdminOrOwner, async (req: Request, res: Response) => {
+    app.get("/availability/property/:propertyId", authenticateToken, authorizeAll, async (req: Request, res: Response) => {
         const { propertyId } = req.params;
     
         try {
@@ -73,9 +73,33 @@ export const initAvailabilityRoutes = (app: express.Express) => {
         }
     });
     
+    app.post("/availability/property/:propertyId/isAvailable", authenticateToken,authorizeAll, async (req: Request, res: Response) => {
+        const { propertyId } = req.params;
+        const { start_date, end_date } = req.body;
+    
+        if (!start_date || !end_date) {
+            return res.status(400).send({ error: "start_date and end_date are required" });
+        }
+    
+        try {
+            const availabilityUsecase = new AvailabilityUsecase(AppDataSource);
+            const isAvailable = await availabilityUsecase.isPropertyAvailable(
+                Number(propertyId),
+                new Date(start_date),
+                new Date(end_date)
+            );
+    
+            res.status(200).send({ isAvailable });
+        } catch (error) {
+            console.error("Error checking property availability:", error);
+            res.status(500).send({ error: "Internal server error" });
+        }
+    });
+    
+    
     
 
-    app.post("/availability", authenticateToken, authorizeAdminOrOwner, async (req: Request, res: Response) => {
+    app.post("/availability", authenticateToken, authorizeAll, async (req: Request, res: Response) => {
         const validation = createAvailabilityValidation.validate(req.body);
 
         if (validation.error) {
@@ -95,7 +119,7 @@ export const initAvailabilityRoutes = (app: express.Express) => {
         }
     });
 
-    app.patch("/availability/:id", authenticateToken, authorizeAdminOrOwner, async (req: Request, res: Response) => {
+    app.patch("/availability/:id", authenticateToken, authorizeAll, async (req: Request, res: Response) => {
         const validation = updateAvailabilityValidation.validate({
             ...req.params,
             ...req.body,
@@ -125,7 +149,7 @@ export const initAvailabilityRoutes = (app: express.Express) => {
         }
     });
 
-    app.delete("/availability/:id", authenticateToken, authorizeAdminOrOwner, async (req: Request, res: Response) => {
+    app.delete("/availability/:id", authenticateToken, authorizeAll, async (req: Request, res: Response) => {
         const validation = deleteAvailabilityValidation.validate(req.params);
 
         if (validation.error) {

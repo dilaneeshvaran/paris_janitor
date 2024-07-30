@@ -35,6 +35,41 @@ export class PaymentUsecase {
     return session.id;
   }
 
+  async processReservationPayment(req: Request, res: Response): Promise<void> {
+    try {
+      const { amount, userId, clientId } = req.body;
+
+      const session = await stripeClient.checkout.sessions.create({
+        payment_method_types: ['card'],
+        line_items: [
+          {
+            price_data: {
+              currency: 'usd',
+              product_data: {
+                name: 'Reservation',
+              },
+              unit_amount: amount * 100, // cents
+            },
+            quantity: 1,
+          },
+        ],
+        mode: 'payment',
+        success_url: 'http://localhost:5173/dashboard/client',
+        cancel_url: 'http://localhost:5173/dashboard/client',
+        metadata: {
+          userId: userId.toString(),
+          clientId: clientId.toString(),
+          amount: amount.toString(),
+        },
+      });
+
+      res.json({ id: session.id });
+    } catch (error) {
+      console.error('Error creating checkout session:', error);
+      res.status(500).json({ message: 'Error creating checkout session' });
+    }
+  }
+
   async handleWebhook(req: Request, res: Response): Promise<void> {
     const sig = req.headers['stripe-signature'] as string;
     const endpointSecret = process.env.STRIPE_ENDPOINT_SECRET!;
@@ -63,6 +98,8 @@ export class PaymentUsecase {
       const session = event.data.object as Stripe.Checkout.Session;
       if (session.metadata) {
         const userId = parseInt(session.metadata.userId);
+        const clientId = parseInt(session.metadata.clientId);
+        const amount = parseInt(session.metadata.amount);
         const userRepo = this.db.getRepository(User);
         const invoiceRepo = this.db.getRepository(Invoice);
 
@@ -71,12 +108,10 @@ export class PaymentUsecase {
           user.vip_status = true;
           await userRepo.save(user);
 
-          const invoice = new Invoice(
-            session.amount_total ? session.amount_total / 100 : 0,
-            userId,
-            new Date().toISOString()
-          );
+          const invoice = new Invoice(amount, clientId, new Date().toISOString());
           await invoiceRepo.save(invoice);
+
+          console.log(`Invoice created for client ID ${clientId} with amount ${amount}`);
         }
       }
     }

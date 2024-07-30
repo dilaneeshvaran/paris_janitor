@@ -16,6 +16,15 @@ paymentRouter.post('/membership', async (req, res) => {
   }
 });
 
+paymentRouter.post('/reservation', async (req, res) => {
+  try {
+    await paymentUsecase.processReservationPayment(req, res);
+  } catch (error) {
+    console.error('Error creating reservation payment session:', error);
+    res.status(500).json({ message: 'Error creating reservation payment session' });
+  }
+});
+
 // Use raw body parser for Stripe webhook endpoint
 paymentRouter.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
   try {

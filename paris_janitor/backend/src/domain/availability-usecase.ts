@@ -1,5 +1,6 @@
 import { DataSource } from "typeorm";
 import { Availability } from "../database/entities/availability";
+import { Between } from "typeorm";
 
 export interface ListAvailability {
     limit: number;
@@ -64,6 +65,25 @@ export class AvailabilityUsecase {
     }
     
 
+    async isPropertyAvailable(propertyId: number, startDate: Date, endDate: Date): Promise<boolean> {
+        try {
+            const unavailableDates = await this.getAvailabilityByPropertyId(propertyId);
+    
+            for (const unavailable of unavailableDates) {
+                if (
+                    (startDate <= unavailable.end_date && endDate >= unavailable.start_date)
+                ) {
+                    return false;
+                }
+            }
+    
+            return true;
+        } catch (error) {
+            console.error("Error in isPropertyAvailable:", error);
+            throw error;
+        }
+    }
+    
 
     async updateAvailability(
         id: number,

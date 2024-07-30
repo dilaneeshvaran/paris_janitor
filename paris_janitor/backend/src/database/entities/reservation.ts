@@ -20,7 +20,7 @@ export class Reservation {
     @Column()
     endDate: string;
 
-    @Column()
+    @Column({ default: "paid" })
     status: string;
 
     constructor(
@@ -29,7 +29,7 @@ export class Reservation {
         traveler_id: number,
         startDate: string,
         endDate: string,
-        status: string,
+        status: string = "paid",
     ) {
         this.property_id = property_id;
         this.client_id = client_id;

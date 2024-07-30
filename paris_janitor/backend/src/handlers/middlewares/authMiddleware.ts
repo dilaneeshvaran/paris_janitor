@@ -37,3 +37,11 @@ export function authorizeAdminOrOwner(req: RequestWithUser, res: Response, next:
         res.status(403).send({ message: "Forbidden: only admins or clients can perform this action" });
     }
 }
+
+export function authorizeAll(req: RequestWithUser, res: Response, next: NextFunction) {
+    if (req.user) {
+        next();
+    } else {
+        res.status(403).send({ message: "Forbidden: only authenticated users can perform this action" });
+    }
+}

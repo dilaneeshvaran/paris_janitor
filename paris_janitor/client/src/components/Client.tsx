@@ -54,6 +54,7 @@ const ClientDashboard: React.FC = () => {
                         <div key={property.id} className="property-item">
                             <h3>{property.name}</h3>
                             <p>{property.description}</p>
+                            <p>Price: ${property.price}</p>
                             <img className='img-reserve' src={property.imageUrl} alt={property.name} />
                             <button onClick={() => setSelectedProperty(property)}>Reserve</button>
                         </div>

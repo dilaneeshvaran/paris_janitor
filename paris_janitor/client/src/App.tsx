@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Home from './components/Home';
@@ -9,12 +9,18 @@ import { AuthProvider } from './components/AuthContext';
 import './App.css';
 import PaymentSuccess from './components/PaymentSuccess';
 import Register from './components/Register';
+import SimulationForm from './components/SimulationForm';
 
 const App: React.FC = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
+
   return (
     <AuthProvider>
       <Router>
-        <Navbar />
+        <Navbar openModal={openModal} />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login/:userType" element={<Login />} />
@@ -23,6 +29,9 @@ const App: React.FC = () => {
           <Route path="/success" element={<PaymentSuccess />} />
           <Route path="/register" element={<Register />} />
         </Routes>
+        {isModalOpen && (
+          <SimulationForm isOpen={isModalOpen} onClose={closeModal} />
+        )}
       </Router>
     </AuthProvider>
   );

@@ -3,7 +3,6 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { loadStripe } from '@stripe/stripe-js';
 
-// Load your Stripe public key
 const stripePromise = loadStripe('pk_test_51PScAqGc0PhuZBe9Uqm7XP3iXPKio8QNqbt4iNfSINUE06VzAPldOUwEgVn94rLLmQKd8STxK6fj12YKwBeiMRbS00DCyPSNGY');
 
 interface ReserveProps {
@@ -16,6 +15,7 @@ const Reserve: React.FC<ReserveProps> = ({ propertyId, price, onClose }) => {
     const [startDate, setStartDate] = useState<Date | null>(null);
     const [endDate, setEndDate] = useState<Date | null>(null);
     const [disabledDates, setDisabledDates] = useState<Date[]>([]);
+    const [totalPrice, setTotalPrice] = useState<number>(0);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
@@ -71,6 +71,13 @@ const Reserve: React.FC<ReserveProps> = ({ propertyId, price, onClose }) => {
     const handleStartDateChange = (value: Date | Date[] | null | any) => handleDateChange(value, 'start');
     const handleEndDateChange = (value: Date | Date[] | null | any) => handleDateChange(value, 'end');
 
+    useEffect(() => {
+        if (startDate && endDate) {
+            const days = (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24) + 1; // +1 to include end date
+            setTotalPrice(days * price);
+        }
+    }, [startDate, endDate, price]);
+
     const handleSubmit = async () => {
         const stripe = await stripePromise;
         if (!stripe) {
@@ -116,7 +123,7 @@ const Reserve: React.FC<ReserveProps> = ({ propertyId, price, onClose }) => {
                     'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify({
-                    amount: price,
+                    amount: totalPrice,
                     userId,
                     clientId: userId,
                     reservationId: reservationId.toString(),
@@ -168,7 +175,6 @@ const Reserve: React.FC<ReserveProps> = ({ propertyId, price, onClose }) => {
         }
     };
 
-
     const tileDisabled = ({ date }: { date: Date }) => {
         return disabledDates.some(disabledDate =>
             disabledDate.toDateString() === date.toDateString());
@@ -189,6 +195,7 @@ const Reserve: React.FC<ReserveProps> = ({ propertyId, price, onClose }) => {
                     value={endDate}
                     tileDisabled={tileDisabled}
                 />
+                <p><strong>Total Price: </strong>${totalPrice.toFixed(2)}</p>
                 <button onClick={handleSubmit} disabled={!startDate || !endDate}>
                     Proceed to Payment
                 </button>

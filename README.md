@@ -1,8 +1,4 @@
-//Bailleur
-//devis temps réel
-
-//Client
-//display the price for reservation : multiply for dates reserved
+//vip status ends? send automatic email
 
 //Backoffice
 //accept a property creation

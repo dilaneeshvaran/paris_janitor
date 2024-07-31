@@ -15,19 +15,19 @@ const AdminDashboard: React.FC = () => {
       <nav className="dashboard-nav">
         <ul>
           <li>
-            <Link to="manage-users">Manage Users</Link>
+            <Link to="manage-users">Manager Users</Link>
           </li>
           <li>
-            <Link to="manage-properties">Manage Properties</Link>
+            <Link to="manage-properties">Manager Propriété</Link>
           </li>
           <li>
-            <Link to="received-simulations">Received Simulations</Link>
+            <Link to="received-simulations">Simulations Devis</Link>
           </li>
           <li>
             <Link to="services">Services</Link>
           </li>
           <li>
-            <button onClick={handleLogout} className="logout-button">Logout</button>
+            <button onClick={handleLogout} className="logout-button">Déconnexion</button>
           </li>
         </ul>
       </nav>

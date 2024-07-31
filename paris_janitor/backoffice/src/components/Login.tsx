@@ -18,7 +18,7 @@ const Login: React.FC = () => {
                 localStorage.setItem('role', role);
                 navigate('/admin/manage-users');
             } else {
-                alert('You are not authorized to access this page');
+                alert('Vous n\'avez pas les droits pour accéder à cette page');
             }
         } catch (error) {
             console.error('Login error', error);
@@ -35,7 +35,7 @@ const Login: React.FC = () => {
                     <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
                 </label>
                 <label>
-                    Password:
+                    Mot de passe:
                     <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
                 </label>
                 <button type="submit">Login</button>

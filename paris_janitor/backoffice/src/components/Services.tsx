@@ -61,7 +61,7 @@ const Services: React.FC = () => {
 
     const handleStatusChange = (serviceId: number) => {
         if (selectedProvider === null) {
-            alert("Please select a provider before changing the status.");
+            alert("Veillez choisir un prestataire avant de modifier le status.");
             return;
         }
 
@@ -108,10 +108,10 @@ const Services: React.FC = () => {
             <table className="manage-services-table">
                 <thead>
                     <tr>
-                        <th>Name</th>
+                        <th>Nom</th>
                         <th>Description</th>
-                        <th>Price</th>
-                        <th>Provider</th>
+                        <th>Prix</th>
+                        <th>Prestataire</th>
                         <th>Status</th>
                         <th>Actions</th>
                     </tr>
@@ -127,7 +127,7 @@ const Services: React.FC = () => {
                                     value={service.provider_id || ""}
                                     onChange={e => setSelectedProvider(Number(e.target.value))}
                                 >
-                                    <option value="">Select Provider</option>
+                                    <option value="">Choisir le Prestataire</option>
                                     {providers.map(provider => (
                                         <option key={provider.id} value={provider.id}>
                                             {provider.name}
@@ -147,7 +147,7 @@ const Services: React.FC = () => {
                                 </select>
                             </td>
                             <td>
-                                <button onClick={() => handleStatusChange(service.id)}>Update</button>
+                                <button onClick={() => handleStatusChange(service.id)}>Mettre à jour</button>
                             </td>
                         </tr>
                     ))}

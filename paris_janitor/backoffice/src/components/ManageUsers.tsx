@@ -140,14 +140,14 @@ const ManageUsers: React.FC = () => {
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>First Name</th>
-                        <th>Last Name</th>
+                        <th>Nom</th>
+                        <th>Prénom</th>
                         <th>Email</th>
                         <th>Role</th>
-                        <th>VIP Status</th>
-                        <th>Paid for VIP</th>
-                        <th>Total Revenue</th>
-                        <th>Revenue This Month</th>
+                        <th>Status VIP</th>
+                        <th>VIP Payé</th>
+                        <th>Revenue Totale</th>
+                        <th>Revenue Ce Mois</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -192,7 +192,7 @@ const ManageUsers: React.FC = () => {
                                 )}
                             </td>
                             <td>{user.role}</td>
-                            <td>{user.vip_status ? 'VIP' : 'Regular'}</td>
+                            <td>{user.vip_status ? 'VIP' : 'Non'}</td>
                             <td>
                                 {user.vip_status ? (
                                     <FetchVipStatus userId={user.id} token={token} />
@@ -204,9 +204,9 @@ const ManageUsers: React.FC = () => {
                             <td>{calculateMonthlyRevenue(user.id)}</td>
                             <td>
                                 {editUserId === user.id ? (
-                                    <button onClick={() => handleSaveClick(user.id)}>Save</button>
+                                    <button onClick={() => handleSaveClick(user.id)}>Enregistrer</button>
                                 ) : (
-                                    <button onClick={() => handleEditClick(user)}>Edit</button>
+                                    <button onClick={() => handleEditClick(user)}>Modifier</button>
                                 )}
                             </td>
                         </tr>
@@ -240,7 +240,7 @@ const FetchVipStatus: React.FC<{ userId: number, token: string | null }> = ({ us
         }
     }, [userId, token]);
 
-    return <>{isVipPaid ? 'Yes' : 'No'}</>;
+    return <>{isVipPaid ? 'Oui' : 'Non'}</>;
 };
 
 export default ManageUsers;

@@ -91,16 +91,16 @@ const ManageProperties: React.FC = () => {
 
     return (
         <div className="manage-properties">
-            <h2>Manage Properties</h2>
+            <h2>Manager Propriétés</h2>
             <table className="manage-properties-table">
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Name</th>
-                        <th>Location</th>
-                        <th>Verified</th>
+                        <th>Nom</th>
+                        <th>Lieu</th>
+                        <th>Vérifié</th>
                         <th>Actions</th>
-                        <th>Reservations</th>
+                        <th>Réservations</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -109,21 +109,21 @@ const ManageProperties: React.FC = () => {
                             <td>{property.id}</td>
                             <td>{property.name}</td>
                             <td>{property.address}</td>
-                            <td>{property.verified ? 'Yes' : 'No'}</td>
+                            <td>{property.verified ? 'Oui' : 'Non'}</td>
                             <td>
                                 <button onClick={() => handleVerifyClick(property.id, property.verified)}>
-                                    {property.verified ? 'Unverify' : 'Verify'}
+                                    {property.verified ? 'Ne Pas Vérifier' : 'Verifier'}
                                 </button>
                             </td>
                             <td>
                                 <button onClick={() => handleViewReservationsClick(property.id)}>
-                                    View Reservations
+                                    Voir Réservations
                                 </button>
                                 {reservations[property.id] && (
                                     <ul>
                                         {reservations[property.id].map(reservation => (
                                             <li key={reservation.id}>
-                                                {new Date(reservation.startDate).toLocaleDateString()} to {new Date(reservation.endDate).toLocaleDateString()} - {reservation.status}
+                                                {new Date(reservation.startDate).toLocaleDateString()} à {new Date(reservation.endDate).toLocaleDateString()} - {reservation.status}
                                             </li>
                                         ))}
                                     </ul>

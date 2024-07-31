@@ -45,14 +45,14 @@ const ReceivedSimulations: React.FC = () => {
                     <tr>
                         <th>ID</th>
                         <th>Address</th>
-                        <th>Type Property</th>
+                        <th>Type Bien</th>
                         <th>Type Location</th>
-                        <th>Number of Rooms</th>
-                        <th>Capacity</th>
+                        <th>Nombre de Chambre</th>
+                        <th>Capacité</th>
                         <th>Surface</th>
                         <th>Email</th>
-                        <th>Full Name</th>
-                        <th>Phone Number</th>
+                        <th>Nom Prénom</th>
+                        <th>Numéro Tél</th>
                     </tr>
                 </thead>
                 <tbody>

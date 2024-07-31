@@ -25,7 +25,10 @@ const ReservationModal: React.FC<ReservationModalProps> = ({ isOpen, onClose, pr
                 }
             })
                 .then(response => {
-                    setReservations(response.data);
+                    const futureReservations = response.data.filter((reservation: Reservation) =>
+                        new Date(reservation.endDate) > new Date()
+                    );
+                    setReservations(futureReservations);
                 })
                 .catch(error => {
                     console.error('Error fetching reservations:', error);
@@ -62,7 +65,6 @@ const ReservationModal: React.FC<ReservationModalProps> = ({ isOpen, onClose, pr
             const userEmail = userResponse.data.email;
             const userName = userResponse.data.firstname + ' ' + userResponse.data.lastname;
             const propertyName = propertyRes.data.name;
-
 
             console.log('User email:', userEmail);
 

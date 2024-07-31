@@ -1,0 +1,35 @@
+.dashboard-container {
+    display: flex;
+    height: 100vh;
+  }
+  
+  .dashboard-nav {
+    width: 200px;
+    background-color: #343a40;
+    color: white;
+    padding: 20px;
+  }
+  
+  .dashboard-nav ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .dashboard-nav li {
+    margin: 20px 0;
+  }
+  
+  .dashboard-nav a {
+    color: white;
+    text-decoration: none;
+  }
+  
+  .dashboard-nav a:hover {
+    text-decoration: underline;
+  }
+  
+  .dashboard-content {
+    flex-grow: 1;
+    padding: 20px;
+  }
+  

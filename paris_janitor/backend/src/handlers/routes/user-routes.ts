@@ -233,7 +233,6 @@ app.patch("/users/:id",authenticateToken, async (req: Request, res: Response) =>
       if (user) {
         const isPasswordMatch = await userUsecase.comparePassword(userRequest.password, user.password);
         if (isPasswordMatch) {
-          // Generate JWT token when user authed
           const token = jwt.sign({ id: user.id, role: user.role }, 'your_secret_key', { expiresIn: '1h' });
           res.status(200).send({ 
             message: "User authenticated successfully", 

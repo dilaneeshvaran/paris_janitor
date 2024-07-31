@@ -38,7 +38,7 @@ export class PaymentUsecase {
 
   async processReservationPayment(req: Request, res: Response): Promise<void> {
     try {
-      const { amount, userId, clientId, reservationId  } = req.body; // Include reservationId
+      const { amount, userId, clientId, reservationId  } = req.body;
 
       // Log received values
       console.log('Received values:', { userId, clientId, amount, reservationId });

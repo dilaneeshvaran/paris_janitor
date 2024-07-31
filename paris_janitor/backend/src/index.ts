@@ -1,4 +1,4 @@
-import 'dotenv/config'; // Make sure this is at the very top
+import 'dotenv/config';
 import express from 'express';
 import { initUserRoutes } from './handlers/routes/user-routes';
 import { initInvoiceRoutes } from './handlers/routes/invoice-routes';
@@ -17,7 +17,7 @@ import path from 'path';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 
-// Function to verify if the request is for the Stripe webhook
+//verify if request is for stripe webhook
 const isStripeWebhook = (req: express.Request): boolean => req.originalUrl === '/api/payment/webhook';
 
 const main = async () => {
@@ -34,7 +34,7 @@ const main = async () => {
     process.exit(1);
   }
 
-  // Conditional body parser
+  //body parser
   app.use((req, res, next) => {
     if (isStripeWebhook(req)) {
       next();
@@ -43,7 +43,7 @@ const main = async () => {
     }
   });
 
-  // Configure Multer storage
+  //multer storage
   const storage = multer.diskStorage({
     destination: function (req, file, cb) {
       cb(null, 'uploads/');
@@ -56,13 +56,13 @@ const main = async () => {
 
   const upload = multer({
     storage: storage,
-    limits: { fileSize: 1024 * 1024 * 5 } // 5MB limit
+    limits: { fileSize: 1024 * 1024 * 5 } //5mb limit
   });
 
-  // Static file serving
+  //file serve
   app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-  // Upload route
+  //file upload
   app.post('/upload', upload.single('image'), (req, res) => {
     if (!req.file) {
       return res.status(400).send({ error: 'No file uploaded' });
@@ -77,7 +77,6 @@ const main = async () => {
     }
   });
 
-  // Initialize other routes
   initUserRoutes(app);
   initInvoiceRoutes(app);
   initPropertyRoutes(app);

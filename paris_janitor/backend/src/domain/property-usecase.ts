@@ -108,7 +108,7 @@ export class PropertyUsecase {
         if (imageUrl) {
             propertyFound.imageUrl = imageUrl;
         }
-        if (typeof verified !== 'undefined') {  // Updated check for verified
+        if (typeof verified !== 'undefined') {  
             propertyFound.verified = verified;
         }
     

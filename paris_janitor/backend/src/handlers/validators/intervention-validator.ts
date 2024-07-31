@@ -3,7 +3,7 @@ import Joi from "joi";
 export interface CreateInterventionValidation {
     service_id: number;
     provider_id: number;
-    date: string; // ISO date string
+    date: string;
     status: string;
 }
 

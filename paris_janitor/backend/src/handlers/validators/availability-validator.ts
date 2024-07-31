@@ -2,8 +2,8 @@ import Joi from "joi";
 
 export interface CreateAvailabilityValidation {
     property_id: number;
-    start_date: string; // ISO date string
-    end_date: string;   // ISO date string
+    start_date: string; // ISO date
+    end_date: string;  
     reservation_id?: number;
 }
 
@@ -17,8 +17,8 @@ export const createAvailabilityValidation = Joi.object<CreateAvailabilityValidat
 export interface UpdateAvailabilityValidation {
     id: number;
     property_id?: number;
-    start_date?: string; // ISO date string
-    end_date?: string;   // ISO date string
+    start_date?: string; 
+    end_date?: string;   
 }
 
 export const updateAvailabilityValidation = Joi.object<UpdateAvailabilityValidation>({

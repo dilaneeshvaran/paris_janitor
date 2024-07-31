@@ -110,7 +110,7 @@ export class UserUsecase {
             userFound.lastname = lastname;
         }
     
-        // Only hash and update password if a new password is provided
+        //only hash and update if new password provided
         if (typeof password === 'string' && password.length > 0) {
             console.log("iiiiiiiiiiiiiiiiiiiii");
             userFound.password = await this.hashPassword(password);

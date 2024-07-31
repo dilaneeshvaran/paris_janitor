@@ -1,5 +1,6 @@
-import { DataSource } from "typeorm";
+import { DataSource, getRepository } from "typeorm";
 import { Property } from "../database/entities/property";
+import { Reservation } from "../database/entities/reservation";
 
 export interface ListProperty {
     limit: number;
@@ -65,6 +66,20 @@ export class PropertyUsecase {
         }
         
         return properties;
+    }
+
+    async getPropertyByReservationId(reservationId: number): Promise<Property | null> {
+        const query = this.db.createQueryBuilder(Property, "properties")
+            .innerJoin(Reservation, "reservations", "properties.id = reservations.property_id")
+            .where("reservations.id = :reservationId", { reservationId });
+        
+        const property = await query.getOne();
+        
+        if (!property) {
+            throw new Error('No property found for this reservation ID');
+        }
+        
+        return property;
     }
 
     async updateProperty(

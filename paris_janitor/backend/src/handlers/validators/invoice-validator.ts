@@ -4,12 +4,16 @@ export interface CreateInvoiceValidation {
   amount: number;
   client_id: number;
   date: string;
+  service_id?: number;
+  reservation_id?: number;
 }
 
 export const createInvoiceValidation = Joi.object<CreateInvoiceValidation>({
   amount: Joi.number().positive().required(),
   client_id: Joi.number().required(),
   date: Joi.date().iso().required(),
+  service_id: Joi.number().optional(),
+  reservation_id: Joi.number().optional(),
 });
 
 export interface UpdateInvoiceValidation {

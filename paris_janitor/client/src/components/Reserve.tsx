@@ -104,6 +104,10 @@ const Reserve: React.FC<ReserveProps> = ({ propertyId, price, onClose }) => {
                 return;
             }
 
+            // Parse the reservation response to get the reservation ID
+            const reservationData = await reservationResponse.json();
+            const reservationId = reservationData.id;
+
             // Then, create the payment
             const paymentResponse = await fetch('http://localhost:3000/api/payment/reservation', {
                 method: 'POST',
@@ -115,6 +119,7 @@ const Reserve: React.FC<ReserveProps> = ({ propertyId, price, onClose }) => {
                     amount: price,
                     userId,
                     clientId: userId,
+                    reservationId: reservationId.toString(),
                 }),
             });
 
@@ -135,6 +140,7 @@ const Reserve: React.FC<ReserveProps> = ({ propertyId, price, onClose }) => {
                     property_id: propertyId,
                     start_date: startDate?.toISOString(),
                     end_date: endDate?.toISOString(),
+                    reservation_id: reservationId,
                 }),
             });
 
@@ -161,6 +167,7 @@ const Reserve: React.FC<ReserveProps> = ({ propertyId, price, onClose }) => {
             alert('An error occurred while processing the payment. Please try again.');
         }
     };
+
 
     const tileDisabled = ({ date }: { date: Date }) => {
         return disabledDates.some(disabledDate =>

@@ -59,6 +59,43 @@ export const initInvoiceRoutes = (app: express.Express) => {
     }
   });
 
+  app.get("/invoices/reservation/:reservationId", authenticateToken, authorizeAdminOrOwner, async (req: Request, res: Response) => {
+    const { reservationId } = req.params;
+
+    try {
+        const invoiceUsecase = new InvoiceUsecase(AppDataSource);
+        const invoice = await invoiceUsecase.getInvoiceByReservationId(Number(reservationId));
+
+        if (invoice) {
+            res.status(200).send(invoice);
+        } else {
+            res.status(404).send({ error: "Invoice not found" });
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({ error: "Internal server error" });
+    }
+}
+  );
+
+  app.get("/invoices/owner/:ownerId", authenticateToken, authorizeAdminOrOwner, async (req: Request, res: Response) => {
+    const { ownerId } = req.params;
+
+    try {
+        const invoiceUsecase = new InvoiceUsecase(AppDataSource);
+        const invoices = await invoiceUsecase.getInvoiceByOwnerId(Number(ownerId));
+
+        if (invoices && invoices.length > 0) {
+            res.status(200).send(invoices);
+        } else {
+            res.status(404).send({ error: "Invoices not found" });
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({ error: "Internal server error" });
+    }
+});
+
   app.get("/invoices/user/:userId", authenticateToken, authorizeAdminOrOwner, async (req: Request, res: Response) => {
     const { userId } = req.params;
 

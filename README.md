@@ -1,7 +1,8 @@
 //Bailleur
-//recap finance revenu (reservation pour le mois+total)
 //devis temps réel
 
+//Client
+//display the price for reservation : multiply for dates reserved
 
 //Backoffice
 //accept a property creation

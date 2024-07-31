@@ -110,6 +110,29 @@ app.get("/properties/owner/:ownerId", authenticateToken, authorizeAdminOrOwner, 
     }
   });
 
+  app.get(
+    "/properties/reservation/:reservationId",
+    authenticateToken,
+    authorizeAll,
+    async (req: Request, res: Response) => {
+      const { reservationId } = req.params;
+  
+      try {
+        const propertyUsecase = new PropertyUsecase(AppDataSource); 
+        const property = await propertyUsecase.getPropertyByReservationId(Number(reservationId));
+  
+        if (property) {
+          res.status(200).send(property);
+        } else {
+          res.status(404).send({ error: "Property not found" });
+        }
+      } catch (error) {
+        console.error(error);
+        res.status(500).send({ error: "Internal server error" });
+      }
+    }
+  );
+
   app.post("/properties", authenticateToken, authorizeAdminOrOwner, async (req: Request, res: Response) => {
     const validation = createPropertyValidation.validate(req.body);
   

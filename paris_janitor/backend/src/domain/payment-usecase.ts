@@ -37,8 +37,8 @@ export class PaymentUsecase {
 
   async processReservationPayment(req: Request, res: Response): Promise<void> {
     try {
-      const { amount, userId, clientId } = req.body;
-
+      const { amount, userId, clientId, reservationId } = req.body; // Include reservationId
+  
       const session = await stripeClient.checkout.sessions.create({
         payment_method_types: ['card'],
         line_items: [
@@ -60,32 +60,30 @@ export class PaymentUsecase {
           userId: userId.toString(),
           clientId: clientId.toString(),
           amount: amount.toString(),
+          reservationId: reservationId.toString(), // Include reservationId in metadata
         },
       });
-
+  
       res.json({ id: session.id });
     } catch (error) {
       console.error('Error creating checkout session:', error);
       res.status(500).json({ message: 'Error creating checkout session' });
     }
   }
-
+  
   async handleWebhook(req: Request, res: Response): Promise<void> {
     const sig = req.headers['stripe-signature'] as string;
     const endpointSecret = process.env.STRIPE_ENDPOINT_SECRET!;
     const payload = req.body;
-
-    console.log("Received Stripe webhook with signature:", sig);
-    console.log("Stripe Endpoint Secret:", endpointSecret);
-
+  
     if (!sig || !endpointSecret) {
       console.error('Missing stripe-signature or endpoint secret.');
       res.status(400).send('Webhook signature verification failed.');
       return;
     }
-
+  
     let event: Stripe.Event;
-
+  
     try {
       event = stripeClient.webhooks.constructEvent(payload, sig, endpointSecret);
     } catch (err: any) {
@@ -93,29 +91,31 @@ export class PaymentUsecase {
       res.status(400).send(`Webhook Error: ${err.message}`);
       return;
     }
-
+  
     if (event.type === 'checkout.session.completed') {
       const session = event.data.object as Stripe.Checkout.Session;
       if (session.metadata) {
         const userId = parseInt(session.metadata.userId);
         const clientId = parseInt(session.metadata.clientId);
         const amount = parseInt(session.metadata.amount);
+        const reservationId = parseInt(session.metadata.reservationId); // Parse reservationId
         const userRepo = this.db.getRepository(User);
         const invoiceRepo = this.db.getRepository(Invoice);
-
+  
         const user = await userRepo.findOneBy({ id: userId });
         if (user) {
           user.vip_status = true;
           await userRepo.save(user);
-
-          const invoice = new Invoice(amount, clientId, new Date().toISOString());
+  
+          const invoice = new Invoice(amount, clientId, new Date().toISOString(), reservationId);
           await invoiceRepo.save(invoice);
-
+  
           console.log(`Invoice created for client ID ${clientId} with amount ${amount}`);
         }
       }
     }
-
+  
     res.status(200).end();
   }
+  
 }

@@ -59,6 +59,8 @@ export const initReservationRoutes = (app: express.Express) => {
     }
   });
 
+
+
   app.get("/reservations/user/:userId", authenticateToken, authorizeAll, async (req: Request, res: Response) => {
     const { userId } = req.params;
 

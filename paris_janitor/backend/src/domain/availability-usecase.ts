@@ -12,6 +12,7 @@ export interface UpdateAvailabilityParams {
     property_id?: number;
     start_date?: string;
     end_date?: string;
+    reservation_id?: number;
 }
 
 export class AvailabilityUsecase {
@@ -87,7 +88,7 @@ export class AvailabilityUsecase {
 
     async updateAvailability(
         id: number,
-        { property_id, start_date, end_date }: UpdateAvailabilityParams
+        { property_id, start_date, end_date, reservation_id }: UpdateAvailabilityParams
     ): Promise<Availability | null> {
         const repo = this.db.getRepository(Availability);
         const availabilityFound = await repo.findOneBy({ id });
@@ -101,6 +102,9 @@ export class AvailabilityUsecase {
         }
         if (end_date !== undefined) {
             availabilityFound.end_date = new Date(end_date);
+        }
+        if(reservation_id !== undefined) {
+            availabilityFound.reservation_id = reservation_id;
         }
         
         const availabilityUpdate = await repo.save(availabilityFound);

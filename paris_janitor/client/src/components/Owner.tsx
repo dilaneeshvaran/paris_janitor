@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import PropertyList from './PropertyList';
 import PropertyModal from './PropertyModal';
-import VipStatusModal from './VipStatusModal'; // Import the VIP Status Modal
-import ReservationModal from './ReservationModal'; // Import the Reservation Modal
-import EditProfile from './EditProfile'; // Import the EditProfile component
-import PropertyStateModal from './PropertyStateModal'; // Import the PropertyStateModal
+import VipStatusModal from './VipStatusModal';
+import ReservationModal from './ReservationModal';
+import EditProfile from './EditProfile';
+import PropertyStateModal from './PropertyStateModal';
+import RevenueModal from './RevenueModal';
 import { Property } from './types';
 
 const OwnerDashboard: React.FC = () => {
@@ -17,9 +18,10 @@ const OwnerDashboard: React.FC = () => {
     const [isVipModalOpen, setIsVipModalOpen] = useState<boolean>(false);
     const [isReservationModalOpen, setIsReservationModalOpen] = useState<boolean>(false);
     const [viewingPropertyId, setViewingPropertyId] = useState<number | null>(null);
-    const [isEditProfileModalOpen, setIsEditProfileModalOpen] = useState<boolean>(false); // State for EditProfile modal
-    const [isStateModalOpen, setIsStateModalOpen] = useState<boolean>(false); // State for PropertyStateModal
-    const [viewingStatePropertyId, setViewingStatePropertyId] = useState<number | null>(null); // ID for PropertyStateModal
+    const [isEditProfileModalOpen, setIsEditProfileModalOpen] = useState<boolean>(false);
+    const [isStateModalOpen, setIsStateModalOpen] = useState<boolean>(false);
+    const [viewingStatePropertyId, setViewingStatePropertyId] = useState<number | null>(null);
+    const [isRevenueModalOpen, setIsRevenueModalOpen] = useState<boolean>(false); // State for RevenueModal
 
     useEffect(() => {
         const userId = localStorage.getItem('userId');
@@ -27,16 +29,10 @@ const OwnerDashboard: React.FC = () => {
 
         if (userId && token) {
             axios.get(`http://localhost:3000/properties/owner/${userId}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
+                headers: { Authorization: `Bearer ${token}` }
             })
-                .then(response => {
-                    setProperties(response.data);
-                })
-                .catch(error => {
-                    console.error('There was an error fetching the properties!', error);
-                });
+                .then(response => setProperties(response.data))
+                .catch(error => console.error('Error fetching properties!', error));
         } else {
             console.error('User ID or token not found in local storage');
         }
@@ -51,16 +47,10 @@ const OwnerDashboard: React.FC = () => {
         const token = localStorage.getItem('token');
         if (token) {
             axios.delete(`http://localhost:3000/properties/${id}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
+                headers: { Authorization: `Bearer ${token}` }
             })
-                .then(() => {
-                    setProperties(properties.filter(property => property.id !== id));
-                })
-                .catch(error => {
-                    console.error('Error deleting room:', error);
-                });
+                .then(() => setProperties(properties.filter(property => property.id !== id)))
+                .catch(error => console.error('Error deleting room:', error));
         }
     };
 
@@ -74,15 +64,16 @@ const OwnerDashboard: React.FC = () => {
         setIsStateModalOpen(true);
     };
 
-    const handleEditProfile = () => {
-        setIsEditProfileModalOpen(true);
-    };
+    const handleEditProfile = () => setIsEditProfileModalOpen(true);
+
+    const handleViewRevenue = () => setIsRevenueModalOpen(true); // Open the revenue modal
 
     return (
         <div>
             <div>
                 <button onClick={() => setIsVipModalOpen(true)}>Check VIP Status</button>
                 <button onClick={handleEditProfile}>Edit Profile</button>
+                <button onClick={handleViewRevenue}>View Revenue</button> {/* Button for Revenue Modal */}
             </div>
             <button onClick={() => setIsCreateModalOpen(true)}>Ajouter</button>
             <h3>Propriétés</h3>
@@ -91,7 +82,7 @@ const OwnerDashboard: React.FC = () => {
                 onModifyRoom={handleModifyRoom}
                 onDeleteRoom={handleDeleteRoom}
                 onViewReservations={handleViewReservations}
-                onViewState={handleViewState} // Pass the new handler
+                onViewState={handleViewState}
             />
             {isCreateModalOpen && (
                 <PropertyModal
@@ -137,6 +128,13 @@ const OwnerDashboard: React.FC = () => {
                 <EditProfile
                     userId={localStorage.getItem('userId') || ''}
                     onClose={() => setIsEditProfileModalOpen(false)}
+                />
+            )}
+            {isRevenueModalOpen && (
+                <RevenueModal
+                    isOpen={isRevenueModalOpen}
+                    onClose={() => setIsRevenueModalOpen(false)}
+                    ownerId={parseInt(localStorage.getItem('userId') || '0', 10)}
                 />
             )}
         </div>

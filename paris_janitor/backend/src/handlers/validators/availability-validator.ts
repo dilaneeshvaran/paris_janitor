@@ -4,12 +4,14 @@ export interface CreateAvailabilityValidation {
     property_id: number;
     start_date: string; // ISO date string
     end_date: string;   // ISO date string
+    reservation_id?: number;
 }
 
 export const createAvailabilityValidation = Joi.object<CreateAvailabilityValidation>({
     property_id: Joi.number().required(),
     start_date: Joi.date().iso().required(),
     end_date: Joi.date().iso().required(),
+    reservation_id: Joi.number().optional(),
 });
 
 export interface UpdateAvailabilityValidation {

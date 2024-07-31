@@ -1,4 +1,6 @@
-//vip status ends? send automatic email
+
+//cant reserve in past
+
 
 //Backoffice
 //accept a property creation

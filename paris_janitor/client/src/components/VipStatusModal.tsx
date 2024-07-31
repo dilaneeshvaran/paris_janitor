@@ -47,7 +47,18 @@ const VipStatusModal: React.FC<VipStatusModalProps> = ({ isOpen, onRequestClose,
     const handlePayment = async () => {
         try {
             setLoading(true);
-            const response = await axios.post('http://localhost:3000/api/payment/membership', { userId });
+            const clientId = userId
+            const amount = 10;
+            const pay_vip = true;
+
+            console.log('Client-side values:', { userId, clientId, amount });
+            const response = await axios.post('http://localhost:3000/api/payment/membership', {
+                userId,
+                clientId,
+                amount,
+                pay_vip,
+            });
+
             const sessionId = response.data.id;
             const stripe = await stripePromise;
 

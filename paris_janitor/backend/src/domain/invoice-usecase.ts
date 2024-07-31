@@ -48,6 +48,17 @@ export class InvoiceUsecase {
       
         return invoice;
     }
+
+    async getVipInvoices(): Promise<Invoice[]> {
+        const query = this.db.createQueryBuilder(Invoice, "invoices");
+
+        query.where("invoices.pay_vip = true");
+
+        const invoices = await query.getMany();
+
+        return invoices;
+    }
+
     async getInvoiceByUserId(clientId: number): Promise<Invoice[]> {
         const query = this.db.createQueryBuilder(Invoice, "invoices");
         

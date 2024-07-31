@@ -10,6 +10,7 @@ import { initInterventionRoutes } from './handlers/routes/intervention-routes';
 import { initServiceRoutes } from './handlers/routes/service-routes';
 import { initSimulationRoutes } from './handlers/routes/simulation-routes';
 import { AppDataSource } from './database/database';
+import './services/EmailScheduler';
 import multer from 'multer';
 import path from 'path';
 import cors from 'cors';

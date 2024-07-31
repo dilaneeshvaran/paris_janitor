@@ -114,6 +114,8 @@ export const initInvoiceRoutes = (app: express.Express) => {
     }
 });
 
+
+
   app.post("/invoices", authenticateToken, authorizeAdminOrOwner, async (req: Request, res: Response) => {
     const validation = createInvoiceValidation.validate(req.body);
 

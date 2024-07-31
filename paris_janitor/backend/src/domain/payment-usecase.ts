@@ -29,7 +29,8 @@ export class PaymentUsecase {
       mode: 'payment',
       success_url: 'http://localhost:5173/success',
       cancel_url: 'http://localhost:5173/dashboard/owner',
-      metadata: { userId: userId.toString() },
+      metadata: { userId: userId.toString(),      payVip: 'true'
+      },
     });
 
     return session.id;
@@ -37,8 +38,25 @@ export class PaymentUsecase {
 
   async processReservationPayment(req: Request, res: Response): Promise<void> {
     try {
-      const { amount, userId, clientId, reservationId } = req.body; // Include reservationId
-  
+      const { amount, userId, clientId, reservationId  } = req.body; // Include reservationId
+
+      // Log received values
+      console.log('Received values:', { userId, clientId, amount, reservationId });
+
+      // Validate and parse the input values
+      const parsedUserId = parseInt(userId);
+      const parsedClientId = parseInt(clientId);
+      const parsedAmount = parseInt(amount);
+      const parsedReservationId = reservationId ? parseInt(reservationId) : 0;
+
+
+
+      if (isNaN(parsedUserId) || isNaN(parsedClientId) || isNaN(parsedAmount)) {
+        console.error('Invalid values received:', { parsedUserId, parsedClientId, parsedAmount });
+        res.status(400).json({ message: 'Invalid input values' });
+        return;
+      }
+
       const session = await stripeClient.checkout.sessions.create({
         payment_method_types: ['card'],
         line_items: [
@@ -48,7 +66,7 @@ export class PaymentUsecase {
               product_data: {
                 name: 'Reservation',
               },
-              unit_amount: amount * 100, // cents
+              unit_amount: parsedAmount * 100, // cents
             },
             quantity: 1,
           },
@@ -57,20 +75,19 @@ export class PaymentUsecase {
         success_url: 'http://localhost:5173/dashboard/client',
         cancel_url: 'http://localhost:5173/dashboard/client',
         metadata: {
-          userId: userId.toString(),
-          clientId: clientId.toString(),
-          amount: amount.toString(),
-          reservationId: reservationId.toString(), // Include reservationId in metadata
+          userId: parsedUserId.toString(),
+          clientId: parsedClientId.toString(),
+          amount: parsedAmount.toString(),
+          reservationId: parsedReservationId.toString(),
         },
       });
-  
+
       res.json({ id: session.id });
     } catch (error) {
       console.error('Error creating checkout session:', error);
       res.status(500).json({ message: 'Error creating checkout session' });
     }
   }
-  
   async handleWebhook(req: Request, res: Response): Promise<void> {
     const sig = req.headers['stripe-signature'] as string;
     const endpointSecret = process.env.STRIPE_ENDPOINT_SECRET!;
@@ -95,27 +112,43 @@ export class PaymentUsecase {
     if (event.type === 'checkout.session.completed') {
       const session = event.data.object as Stripe.Checkout.Session;
       if (session.metadata) {
-        const userId = parseInt(session.metadata.userId);
-        const clientId = parseInt(session.metadata.clientId);
-        const amount = parseInt(session.metadata.amount);
-        const reservationId = parseInt(session.metadata.reservationId); // Parse reservationId
-        const userRepo = this.db.getRepository(User);
-        const invoiceRepo = this.db.getRepository(Invoice);
+        const userId = parseInt(session.metadata.userId) || 0;
+        const clientId = parseInt(session.metadata.clientId) || 0;
+        const reservationId = session.metadata.reservationId ? parseInt(session.metadata.reservationId) : 0;
+        const payVip = session.metadata.payVip === 'true' ? true : false;
   
-        const user = await userRepo.findOneBy({ id: userId });
-        if (user) {
-          user.vip_status = true;
-          await userRepo.save(user);
+
+      let amount = 0;
+
+      //check membership or reservation
+      if (payVip) {
+        amount = 10; 
+      } else {
+        amount = parseInt(session.metadata.amount) || 0;
+      }
+          if (isNaN(userId)) {
+            console.error('Invalid metadata values:', session.metadata);
+            res.status(400).send('Invalid metadata values.');
+            return;
+          }
   
-          const invoice = new Invoice(amount, clientId, new Date().toISOString(), reservationId);
-          await invoiceRepo.save(invoice);
+          const userRepo = this.db.getRepository(User);
+          const invoiceRepo = this.db.getRepository(Invoice);
   
-          console.log(`Invoice created for client ID ${clientId} with amount ${amount}`);
-        }
+          const user = await userRepo.findOneBy({ id: userId });
+          if (user) {
+            user.vip_status = true;
+            await userRepo.save(user);
+  
+            const invoice = new Invoice(amount, userId, new Date().toISOString(), reservationId, payVip);
+            await invoiceRepo.save(invoice);
+  
+            console.log(`Invoice created for user ID ${userId} with amount ${amount}`);
+          }
+        
       }
     }
   
     res.status(200).end();
   }
-  
 }

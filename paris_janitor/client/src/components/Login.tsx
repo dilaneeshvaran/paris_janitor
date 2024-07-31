@@ -29,7 +29,7 @@ const Login: React.FC = () => {
                 const { token, userId, role } = data;
 
                 if (!role || !userId) {
-                    setError('Invalid response from server. Missing role or userId.');
+                    setError('Réponse serveur invalide.');
                     return;
                 }
 
@@ -41,11 +41,11 @@ const Login: React.FC = () => {
                 }
 
                 if (role !== allowedRole) {
-                    setError(`Only ${allowedRole}s are allowed to log in.`);
+                    setError(`Seuls ${allowedRole}s sont autorisé dans cet espace.`);
                     return;
                 }
 
-                login(token, userId, role); // Pass the role to the login function
+                login(token, userId, role);
 
                 if (role === 'guest') {
                     navigate('/dashboard/client');
@@ -53,11 +53,11 @@ const Login: React.FC = () => {
                     navigate('/dashboard/owner');
                 }
             } else {
-                setError(data.message || 'Login failed');
+                setError(data.message || 'Login échoué');
             }
         } catch (error) {
             console.error('Login error:', error);
-            setError('An error occurred. Please try again.');
+            setError('Erreur serveur! réessayer.');
         }
     };
 
@@ -74,7 +74,7 @@ const Login: React.FC = () => {
     return (
         <div className="center-content">
             <div>
-                <h2>Login as {userType}</h2>
+                <h2>Login en tant que {userType}</h2>
                 {error && <p className="error">{error}</p>}
                 <input
                     type="email"
@@ -89,7 +89,7 @@ const Login: React.FC = () => {
                     onChange={(e) => setPassword(e.target.value)}
                 />
                 <button onClick={handleLogin}>Login</button>
-                <button onClick={handleRegisterClick}>Register</button>
+                <button onClick={handleRegisterClick}>S'inscrire</button>
             </div>
         </div>
     );

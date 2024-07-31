@@ -103,7 +103,7 @@ const ReservationModal: React.FC<ReservationModalProps> = ({ isOpen, onClose, pr
         <div className="modal">
             <div className="modal-content">
                 <button className="close-button" onClick={onClose}>Close</button>
-                <h3>Reservations</h3>
+                <h3>Réservations</h3>
                 {reservations.length > 0 ? (
                     <table>
                         <thead>
@@ -122,7 +122,7 @@ const ReservationModal: React.FC<ReservationModalProps> = ({ isOpen, onClose, pr
                                     <td>{new Date(reservation.endDate).toLocaleDateString()}</td>
                                     <td>
                                         <button onClick={() => handleCancelReservation(reservation.id)}>
-                                            Cancel
+                                            Annuler
                                         </button>
                                     </td>
                                 </tr>
@@ -130,7 +130,7 @@ const ReservationModal: React.FC<ReservationModalProps> = ({ isOpen, onClose, pr
                         </tbody>
                     </table>
                 ) : (
-                    <p>No reservations found.</p>
+                    <p>Aucun Réservations Trouvé.</p>
                 )}
             </div>
         </div>

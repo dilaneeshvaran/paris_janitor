@@ -6,7 +6,7 @@ import '../styles/footer.css';
 const Footer = () => {
     return (
         <footer className="footer">
-            <p>&copy; 2018 Paris Janitor. All Rights Reserved.</p>
+            <p>&copy; 2018 Paris Janitor. Tout droits réservé.</p>
             <a href="mailto:eeshvarand@gmail.com"><FontAwesomeIcon icon={faEnvelope} /></a>
             <a href="https://facebook.com"><FontAwesomeIcon icon={faFacebook} /></a>
             <a href="https://twitter.com"><FontAwesomeIcon icon={faTwitter} /></a>

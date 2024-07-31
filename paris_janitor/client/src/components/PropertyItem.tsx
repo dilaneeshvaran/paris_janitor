@@ -6,7 +6,7 @@ interface PropertyItemProps {
     onModifyRoom: (property: Property) => void;
     onDeleteRoom: (id: number) => void;
     onViewReservations: (id: number) => void;
-    onViewState: (id: number) => void; // New prop
+    onViewState: (id: number) => void;
 }
 
 const PropertyItem: React.FC<PropertyItemProps> = ({ property, onModifyRoom, onDeleteRoom, onViewReservations, onViewState }) => {
@@ -14,15 +14,15 @@ const PropertyItem: React.FC<PropertyItemProps> = ({ property, onModifyRoom, onD
         <li style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
             <img src={property.imageUrl} alt={property.name} style={{ width: '50px', height: '50px', marginRight: '10px' }} />
             <div style={{ flexGrow: 1 }}>
-                <div>{property.name} {property.verified && <span style={{ color: 'green' }}>(Verified)</span>}</div>
+                <div>{property.name} {property.verified && <span style={{ color: 'green' }}>(Vérifié)</span>}</div>
                 <div>{property.description}</div>
-                <div>Address: {property.address}</div>
-                <div>Price: ${property.price}</div>
+                <div>Addresse: {property.address}</div>
+                <div>Prix: ${property.price}</div>
             </div>
-            <button onClick={() => onModifyRoom(property)} style={{ marginRight: '5px' }}>Modify</button>
-            <button onClick={() => onDeleteRoom(property.id)} style={{ marginRight: '5px' }}>Delete</button>
-            <button onClick={() => onViewReservations(property.id)} style={{ marginRight: '5px' }}>View Reservations</button>
-            <button onClick={() => onViewState(property.id)}>View State</button> {/* New button */}
+            <button onClick={() => onModifyRoom(property)} style={{ marginRight: '5px' }}>Modifier</button>
+            <button onClick={() => onDeleteRoom(property.id)} style={{ marginRight: '5px' }}>Supprimer</button>
+            <button onClick={() => onViewReservations(property.id)} style={{ marginRight: '5px' }}>Voir Réservations</button>
+            <button onClick={() => onViewState(property.id)}>Voir L'état</button>
         </li>
     );
 };

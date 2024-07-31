@@ -7,14 +7,14 @@ interface PropertyListProps {
     onModifyRoom: (property: Property) => void;
     onDeleteRoom: (id: number) => void;
     onViewReservations: (id: number) => void;
-    onViewState: (id: number) => void; // New prop
+    onViewState: (id: number) => void;
 }
 
 const PropertyList: React.FC<PropertyListProps> = ({ properties, onModifyRoom, onDeleteRoom, onViewReservations, onViewState }) => {
     return (
         <ul>
             {properties.length === 0 ? (
-                <p>No properties found.</p>
+                <p>Aucun propriété trouvé.</p>
             ) : (
                 properties.map((property) => (
                     <PropertyItem

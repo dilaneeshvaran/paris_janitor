@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 
-// Load your Stripe public key
 const stripePromise = loadStripe('pk_test_51PScAqGc0PhuZBe9Uqm7XP3iXPKio8QNqbt4iNfSINUE06VzAPldOUwEgVn94rLLmQKd8STxK6fj12YKwBeiMRbS00DCyPSNGY');
 
 interface Service {
@@ -27,7 +26,6 @@ const Services: React.FC<ServicesProps> = ({ userId, onClose }) => {
     useEffect(() => {
         const token = localStorage.getItem('token');
 
-        // Fetch services
         fetch(`http://localhost:3000/services/user/${userId}`, {
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -37,7 +35,7 @@ const Services: React.FC<ServicesProps> = ({ userId, onClose }) => {
             .then(data => {
                 if (Array.isArray(data)) {
                     setServices(data);
-                    // Fetch property names for each service
+                    //nom propriete
                     data.forEach((service: Service) => {
                         fetch(`http://localhost:3000/properties/service/${service.reservation_id}`, {
                             headers: {
@@ -57,12 +55,12 @@ const Services: React.FC<ServicesProps> = ({ userId, onClose }) => {
                     });
                 } else {
                     console.error('Unexpected data format:', data);
-                    setError('Failed to load services.');
+                    setError('Chargement de service échoué.');
                 }
             })
             .catch(error => {
                 console.error('Error fetching services:', error);
-                setError('Failed to load services.');
+                setError('Chargement de service échoué. réessayer plus tard');
             });
     }, [userId]);
 
@@ -77,7 +75,6 @@ const Services: React.FC<ServicesProps> = ({ userId, onClose }) => {
             const token = localStorage.getItem('token');
             const userId = localStorage.getItem('userId');
 
-            // Create the payment for the service
             const paymentResponse = await fetch('http://localhost:3000/api/payment/reservation', {
                 method: 'POST',
                 headers: {
@@ -93,7 +90,7 @@ const Services: React.FC<ServicesProps> = ({ userId, onClose }) => {
 
             if (!paymentResponse.ok) {
                 const data = await paymentResponse.json();
-                alert(data.message || 'Failed to create Stripe Checkout session.');
+                alert(data.message || 'Checkout échoué.');
                 return;
             }
 
@@ -102,30 +99,30 @@ const Services: React.FC<ServicesProps> = ({ userId, onClose }) => {
 
             if (error) {
                 console.error('Stripe Checkout error:', error);
-                alert('Payment failed. Please try again.');
+                alert('Paiement échoué, réessayer.');
                 return;
             }
 
-            alert('Payment successful!');
+            alert('Payment effectué!');
         } catch (error) {
             console.error('Error processing payment:', error);
-            alert('An error occurred while processing the payment. Please try again.');
+            alert('Paiement échoué, réessayer plus tard.');
         }
     };
 
     return (
         <div className="modal">
             <div className="modal-content">
-                <button className="close-button" onClick={onClose}>Close</button>
+                <button className="close-button" onClick={onClose}>Fermer</button>
                 {error && <p className="error">{error}</p>}
                 {services.length > 0 ? (
                     <table>
                         <thead>
                             <tr>
-                                <th>Property</th>
+                                <th>Propriété</th>
                                 <th>Description</th>
                                 <th>Type</th>
-                                <th>Price</th>
+                                <th>Prix</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
@@ -133,7 +130,7 @@ const Services: React.FC<ServicesProps> = ({ userId, onClose }) => {
                         <tbody>
                             {services.map(service => (
                                 <tr key={service.id}>
-                                    <td>{propertyNames[service.reservation_id] || 'Loading...'}</td>
+                                    <td>{propertyNames[service.reservation_id] || 'Chargement...'}</td>
                                     <td>{service.description}</td>
                                     <td>{service.service_type}</td>
                                     <td>${service.price}</td>
@@ -143,7 +140,7 @@ const Services: React.FC<ServicesProps> = ({ userId, onClose }) => {
                                             onClick={() => handleProceedPayment(service)}
                                             disabled={service.status !== 'accepted'}
                                         >
-                                            Proceed Payment
+                                            Payer
                                         </button>
                                     </td>
                                 </tr>
@@ -151,7 +148,7 @@ const Services: React.FC<ServicesProps> = ({ userId, onClose }) => {
                         </tbody>
                     </table>
                 ) : (
-                    <p>No services found.</p>
+                    <p>Aucun Service Trouvé.</p>
                 )}
             </div>
         </div>

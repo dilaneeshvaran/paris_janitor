@@ -15,12 +15,11 @@ const Register: React.FC = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [role, setRole] = useState(state?.role || 'guest'); // Default to 'guest'
+    const [role, setRole] = useState(state?.role || 'guest');
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
 
     useEffect(() => {
-        // Set the role from state if available
         if (state?.role) {
             setRole(state.role);
         }
@@ -28,7 +27,7 @@ const Register: React.FC = () => {
 
     const handleRegister = async () => {
         if (password !== confirmPassword) {
-            setError("Passwords do not match");
+            setError("Mot de passe ne concorde pas");
             return;
         }
 
@@ -44,10 +43,9 @@ const Register: React.FC = () => {
             const data = await response.json();
 
             if (response.ok) {
-                setSuccess('Registered successfully. Now you need to login.');
+                setSuccess('Inscription succès ! maintenant vous pouvez vous login.');
                 setError('');
 
-                // Redirect to login after 3 seconds
                 setTimeout(() => {
                     if (role == 'client') {
                         navigate('/login/owner');
@@ -56,12 +54,12 @@ const Register: React.FC = () => {
                     }
                 }, 3000);
             } else {
-                setError(data.message || 'Registration failed');
+                setError(data.message || 'Inscription échoué');
                 setSuccess('');
             }
         } catch (error) {
             console.error('Registration error:', error);
-            setError('An error occurred. Please try again.');
+            setError('Erreur serveur ! Réessayer plus tard.');
             setSuccess('');
         }
     };
@@ -69,18 +67,18 @@ const Register: React.FC = () => {
     return (
         <div className="center-content">
             <div>
-                <h2>Register</h2>
+                <h2>S'inscrire</h2>
                 {error && <p className="error">{error}</p>}
                 {success && <p className="success">{success}</p>}
                 <input
                     type="text"
-                    placeholder="First Name"
+                    placeholder="Nom"
                     value={firstname}
                     onChange={(e) => setFirstname(e.target.value)}
                 />
                 <input
                     type="text"
-                    placeholder="Last Name"
+                    placeholder="Prénom"
                     value={lastname}
                     onChange={(e) => setLastname(e.target.value)}
                 />
@@ -92,13 +90,13 @@ const Register: React.FC = () => {
                 />
                 <input
                     type="password"
-                    placeholder="Password"
+                    placeholder="Mot de passe"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                 />
                 <input
                     type="password"
-                    placeholder="Confirm Password"
+                    placeholder="Confirmer mot de passe"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                 />
@@ -107,7 +105,7 @@ const Register: React.FC = () => {
                     <option value="guest">Client</option>
                     <option value="client">Bailleur</option>
                 </select>
-                <button onClick={handleRegister}>Register</button>
+                <button onClick={handleRegister}>S'inscrire</button>
             </div>
         </div>
     );

@@ -21,7 +21,7 @@ const OwnerDashboard: React.FC = () => {
     const [isEditProfileModalOpen, setIsEditProfileModalOpen] = useState<boolean>(false);
     const [isStateModalOpen, setIsStateModalOpen] = useState<boolean>(false);
     const [viewingStatePropertyId, setViewingStatePropertyId] = useState<number | null>(null);
-    const [isRevenueModalOpen, setIsRevenueModalOpen] = useState<boolean>(false); // State for RevenueModal
+    const [isRevenueModalOpen, setIsRevenueModalOpen] = useState<boolean>(false);
 
     useEffect(() => {
         const userId = localStorage.getItem('userId');
@@ -66,14 +66,14 @@ const OwnerDashboard: React.FC = () => {
 
     const handleEditProfile = () => setIsEditProfileModalOpen(true);
 
-    const handleViewRevenue = () => setIsRevenueModalOpen(true); // Open the revenue modal
+    const handleViewRevenue = () => setIsRevenueModalOpen(true);
 
     return (
         <div>
             <div>
-                <button onClick={() => setIsVipModalOpen(true)}>Check VIP Status</button>
-                <button onClick={handleEditProfile}>Edit Profile</button>
-                <button onClick={handleViewRevenue}>View Revenue</button> {/* Button for Revenue Modal */}
+                <button onClick={() => setIsVipModalOpen(true)}>Vérifier Status VIP</button>
+                <button onClick={handleEditProfile}>Modifier Mon Profil</button>
+                <button onClick={handleViewRevenue}>Voir les Revenues</button>
             </div>
             <button onClick={() => setIsCreateModalOpen(true)}>Ajouter</button>
             <h3>Propriétés</h3>

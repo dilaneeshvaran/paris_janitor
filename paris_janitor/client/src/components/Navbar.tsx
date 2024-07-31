@@ -30,7 +30,7 @@ const Navbar: React.FC<NavbarProps> = ({ openModal }) => {
                 <>
                     <Link to="/login/owner">Espace bailleur</Link>
                     <Link to="/login/client">Espace client</Link>
-                    <button onClick={openModal}>Open Simulation Modal</button>
+                    <button onClick={openModal}>Simulation Devis</button>
 
                 </>
             )}

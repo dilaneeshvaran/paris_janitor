@@ -41,11 +41,11 @@ const Reserve: React.FC<ReserveProps> = ({ propertyId, price, onClose }) => {
                     });
                     setDisabledDates(dates);
                 } else {
-                    setError('Failed to format availability.');
+                    setError('Erreur avec le formattage de "availability".');
                 }
             })
             .catch(error => {
-                setError('Failed to load availability.');
+                setError('Chargement des disponibilité échoué.');
             });
     }, [propertyId]);
 
@@ -73,7 +73,7 @@ const Reserve: React.FC<ReserveProps> = ({ propertyId, price, onClose }) => {
 
     useEffect(() => {
         if (startDate && endDate) {
-            const days = (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24) + 1; // +1 to include end date
+            const days = (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24) + 1;
             setTotalPrice(days * price);
         }
     }, [startDate, endDate, price]);
@@ -89,7 +89,6 @@ const Reserve: React.FC<ReserveProps> = ({ propertyId, price, onClose }) => {
             const userId = localStorage.getItem('userId');
             const token = localStorage.getItem('token');
 
-            // First, create the reservation
             const reservationResponse = await fetch('http://localhost:3000/reservations', {
                 method: 'POST',
                 headers: {
@@ -107,15 +106,13 @@ const Reserve: React.FC<ReserveProps> = ({ propertyId, price, onClose }) => {
 
             if (!reservationResponse.ok) {
                 const data = await reservationResponse.json();
-                alert(data.message || 'Failed to create reservation.');
+                alert(data.message || 'Reservation échoué.');
                 return;
             }
 
-            // Parse the reservation response to get the reservation ID
             const reservationData = await reservationResponse.json();
             const reservationId = reservationData.id;
 
-            // Then, create the payment
             const paymentResponse = await fetch('http://localhost:3000/api/payment/reservation', {
                 method: 'POST',
                 headers: {
@@ -132,11 +129,10 @@ const Reserve: React.FC<ReserveProps> = ({ propertyId, price, onClose }) => {
 
             if (!paymentResponse.ok) {
                 const data = await paymentResponse.json();
-                alert(data.message || 'Failed to create Stripe Checkout session.');
+                alert(data.message || 'Checkout écoué.');
                 return;
             }
-
-            // After successful payment, update the availability
+            //mettre à jour availability
             const availabilityResponse = await fetch('http://localhost:3000/availability', {
                 method: 'POST',
                 headers: {
@@ -154,7 +150,7 @@ const Reserve: React.FC<ReserveProps> = ({ propertyId, price, onClose }) => {
             if (!availabilityResponse.ok) {
                 const errorDetails = await availabilityResponse.json();
                 console.error('Failed to update availability:', errorDetails);
-                alert('Reservation created but failed to update availability.');
+                alert('Réservation crée ! mais mis a jour disponibilité échoué.');
                 return;
             }
 
@@ -163,15 +159,15 @@ const Reserve: React.FC<ReserveProps> = ({ propertyId, price, onClose }) => {
 
             if (error) {
                 console.error('Stripe Checkout error:', error);
-                alert('Payment failed. Please try again.');
+                alert('Paiment échoué, réessayer.');
                 return;
             }
 
-            alert('Reservation and payment successful!');
+            alert('Reservation et paiement succès!');
             onClose();
         } catch (error) {
             console.error('Error processing payment:', error);
-            alert('An error occurred while processing the payment. Please try again.');
+            alert('Erreur avec le processus de paiement, réessayer.');
         }
     };
 
@@ -185,7 +181,7 @@ const Reserve: React.FC<ReserveProps> = ({ propertyId, price, onClose }) => {
     return (
         <div className="modal">
             <div className="modal-content">
-                <h2>Reserve Property</h2>
+                <h2>Reserver</h2>
                 {error && <p className="error">{error}</p>}
                 <Calendar
                     onChange={handleStartDateChange}
@@ -199,7 +195,7 @@ const Reserve: React.FC<ReserveProps> = ({ propertyId, price, onClose }) => {
                 />
                 <p><strong>Total Price: </strong>${totalPrice.toFixed(2)}</p>
                 <button onClick={handleSubmit} disabled={!startDate || !endDate}>
-                    Proceed to Payment
+                    Payer
                 </button>
                 <button onClick={onClose}>Close</button>
             </div>

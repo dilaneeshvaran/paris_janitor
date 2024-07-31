@@ -28,7 +28,7 @@ const RevenueModal: React.FC<RevenueModalProps> = ({ isOpen, onClose, ownerId })
         const fetchRevenueData = async () => {
             const token = localStorage.getItem('token');
             if (!token) {
-                setError('No token found.');
+                setError('Token non trouvé.');
                 setLoading(false);
                 return;
             }
@@ -56,7 +56,7 @@ const RevenueModal: React.FC<RevenueModalProps> = ({ isOpen, onClose, ownerId })
 
                 setRevenueData({ monthlyRevenue, totalRevenue, reservations: reservationsWithPropertyNames });
             } catch (err) {
-                setError('Error fetching revenue data.');
+                setError('Erreur recuperation donnée de revenue.');
                 console.error('Error fetching revenue data:', err);
             } finally {
                 setLoading(false);
@@ -74,15 +74,15 @@ const RevenueModal: React.FC<RevenueModalProps> = ({ isOpen, onClose, ownerId })
         <div className="modal">
             <div className="modal-content">
                 <span className="close" onClick={onClose}>&times;</span>
-                <h2>Revenue Details</h2>
+                <h2>Détails Revenues</h2>
                 {loading ? (
-                    <p>Loading...</p>
+                    <p>Chargement...</p>
                 ) : error ? (
                     <p>{error}</p>
                 ) : (
                     <div>
-                        <p><strong>Monthly Revenue:</strong> ${revenueData.monthlyRevenue.toFixed(2)}</p>
-                        <p><strong>Total Revenue:</strong> ${revenueData.totalRevenue.toFixed(2)}</p>
+                        <p><strong>Revenue Mensuel:</strong> ${revenueData.monthlyRevenue.toFixed(2)}</p>
+                        <p><strong>Revenue Total:</strong> ${revenueData.totalRevenue.toFixed(2)}</p>
                         <h3>Reservations</h3>
                         <ul>
                             {revenueData.reservations.map((reservation, index) => (

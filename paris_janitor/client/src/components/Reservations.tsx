@@ -37,12 +37,12 @@ const Reservations: React.FC<ReservationsProps> = ({ userId, onClose }) => {
                 if (response.data && Array.isArray(response.data)) {
                     setReservations(response.data);
                 } else {
-                    setError('Failed to load reservations.');
+                    setError('Chargement des réservations échoué.');
                 }
             })
             .catch(error => {
                 console.error('Error fetching reservations:', error);
-                setError('Failed to load reservations.');
+                setError('Chargement des réservations échoué. réessayer plus tard.');
             });
     }, [userId]);
 
@@ -51,7 +51,7 @@ const Reservations: React.FC<ReservationsProps> = ({ userId, onClose }) => {
         doc.text('Facture', 20, 20);
         (doc as any).autoTable({
             startY: 30,
-            head: [['Property ID', 'Start Date', 'End Date', 'Status']],
+            head: [['ID Propriété', 'Date Début', 'Date Fin', 'Status']],
             body: [
                 [reservation.property_id.toString(), new Date(reservation.startDate).toLocaleDateString(), new Date(reservation.endDate).toLocaleDateString(), reservation.status],
             ],
@@ -70,7 +70,7 @@ const Reservations: React.FC<ReservationsProps> = ({ userId, onClose }) => {
 
     const handleSubmitServiceDemand = () => {
         if (!selectedService || !description) {
-            setError('Please select a service and provide a description.');
+            setError('Veilleez choisir un service et fournir une description.');
             return;
         }
 
@@ -96,27 +96,27 @@ const Reservations: React.FC<ReservationsProps> = ({ userId, onClose }) => {
             })
             .catch(error => {
                 console.error('Error submitting service demand:', error);
-                setError('Failed to submit service demand.');
+                setError('Soumission de demande échoué ! réessayer plus tard.');
             });
     };
 
     return (
         <div className="modal">
             <div className="modal-content">
-                <button className="close-button" onClick={onClose}>Close</button>
+                <button className="close-button" onClick={onClose}>Fermer</button>
                 {error && <p className="error">{error}</p>}
                 {reservations.length > 0 ? (
                     <table>
                         <thead>
                             <tr>
-                                <th>Property ID</th>
-                                <th>Start Date</th>
-                                <th>End Date</th>
+                                <th>ID Propriété</th>
+                                <th>Date Début</th>
+                                <th>Date Fin</th>
                                 <th>Status</th>
                                 <th>Action</th>
                                 <th>Service</th>
                                 <th>Description</th>
-                                <th>Submit</th>
+                                <th>Valider</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -127,14 +127,14 @@ const Reservations: React.FC<ReservationsProps> = ({ userId, onClose }) => {
                                     <td>{new Date(reservation.endDate).toLocaleDateString()}</td>
                                     <td>{reservation.status}</td>
                                     <td>
-                                        <button onClick={() => generatePDF(reservation)}>Get Facture</button>
+                                        <button onClick={() => generatePDF(reservation)}>Avoir le devis</button>
                                     </td>
                                     <td>
                                         <select onChange={(event) => handleServiceChange(event, reservation.id)} value={currentReservationId === reservation.id ? selectedService : ''}>
-                                            <option value="">Select Service</option>
-                                            <option value="cleaning">Cleaning</option>
-                                            <option value="repair">Repair</option>
-                                            <option value="accessory">Accessory</option>
+                                            <option value="">Choisir le service</option>
+                                            <option value="cleaning">Nettoyage</option>
+                                            <option value="repair">Reparation</option>
+                                            <option value="accessory">Accessoire</option>
                                             <option value="baggage">Baggage</option>
                                         </select>
                                     </td>
@@ -148,14 +148,14 @@ const Reservations: React.FC<ReservationsProps> = ({ userId, onClose }) => {
                                         />
                                     </td>
                                     <td>
-                                        <button onClick={handleSubmitServiceDemand}>Submit Service Demand</button>
+                                        <button onClick={handleSubmitServiceDemand}>Envoyer la demande</button>
                                     </td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
                 ) : (
-                    <p>No reservations found.</p>
+                    <p>Aucune réservation trouvé.</p>
                 )}
             </div>
         </div>

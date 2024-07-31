@@ -26,7 +26,7 @@ const EditProfile: React.FC<EditProfileProps> = ({ userId, onClose }) => {
             })
             .catch(error => {
                 console.error('Error fetching user:', error);
-                setError('Failed to load user data.');
+                setError('Chargement des données user échoué.');
             });
     }, [userId]);
 
@@ -54,7 +54,6 @@ const EditProfile: React.FC<EditProfileProps> = ({ userId, onClose }) => {
             email: user.email
         };
 
-        // Log the request data
         console.log('Submitting user update:', updatedUser);
 
         axios.patch(`http://localhost:3000/users/${userId}`, updatedUser, {
@@ -65,26 +64,25 @@ const EditProfile: React.FC<EditProfileProps> = ({ userId, onClose }) => {
         })
             .then(response => {
                 console.log('Response:', response);
-                setSuccess('Profile updated successfully.');
+                setSuccess('Mis à jour!');
                 setError(null);
             })
             .catch(error => {
                 console.error('Error updating profile:', error.response || error.message);
-                setError(error.response?.data?.message || 'Failed to update profile.');
+                setError(error.response?.data?.message || 'Mis à jour échoué.');
             });
     };
 
     const handlePasswordSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (password !== confirmPassword) {
-            setError('Passwords do not match.');
+            setError('Mot de passe ne concordent pas.');
             return;
         }
 
         const token = localStorage.getItem('token');
         const updatedPassword = { password };
 
-        // Log the password change request
         console.log('Submitting password update:', updatedPassword);
 
         axios.patch(`http://localhost:3000/users/${userId}`, updatedPassword, {
@@ -95,7 +93,7 @@ const EditProfile: React.FC<EditProfileProps> = ({ userId, onClose }) => {
         })
             .then(response => {
                 console.log('Response:', response);
-                setSuccess('Password updated successfully.');
+                setSuccess('MDP Mis à jour.');
                 setError(null);
                 setShowPasswordForm(false);
                 setPassword('');
@@ -103,46 +101,46 @@ const EditProfile: React.FC<EditProfileProps> = ({ userId, onClose }) => {
             })
             .catch(error => {
                 console.error('Error updating password:', error.response || error.message);
-                setError(error.response?.data?.message || 'Failed to update password.');
+                setError(error.response?.data?.message || 'Mis à jour du MDP échoué.');
             });
     };
 
     return (
         <div className="modal">
             <div className="modal-content">
-                <button className="close-button" onClick={onClose}>Close</button>
-                <h2>Edit Profile</h2>
+                <button className="close-button" onClick={onClose}>Fermer</button>
+                <h2>Modifier Profil</h2>
                 {error && <p className="error">{error}</p>}
                 {success && <p className="success">{success}</p>}
                 <form onSubmit={handleSubmit}>
                     <label>
-                        First Name:
+                        Nom:
                         <input type="text" name="firstname" value={user.firstname} onChange={handleChange} />
                     </label>
                     <label>
-                        Last Name:
+                        Prénom:
                         <input type="text" name="lastname" value={user.lastname} onChange={handleChange} />
                     </label>
                     <label>
                         Email:
                         <input type="email" name="email" value={user.email} onChange={handleChange} />
                     </label>
-                    <button type="submit">Save Changes</button>
+                    <button type="submit">Enregistrer</button>
                 </form>
                 <button onClick={() => setShowPasswordForm(!showPasswordForm)}>
-                    {showPasswordForm ? 'Cancel' : 'Change Password'}
+                    {showPasswordForm ? 'Annuler' : 'Changer le MDP'}
                 </button>
                 {showPasswordForm && (
                     <form onSubmit={handlePasswordSubmit}>
                         <label>
-                            New Password:
+                            Nouveau MDP:
                             <input type="password" name="password" value={password} onChange={handlePasswordChange} />
                         </label>
                         <label>
-                            Confirm New Password:
+                            Confirmer MDP:
                             <input type="password" name="confirmPassword" value={confirmPassword} onChange={handleConfirmPasswordChange} />
                         </label>
-                        <button type="submit">Save New Password</button>
+                        <button type="submit">Enregistrer le Nouveau MDP</button>
                     </form>
                 )}
             </div>

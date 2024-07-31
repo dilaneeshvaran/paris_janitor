@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import AvailabilityPicker from './AvailabilityPicker';
 import { Property } from './types';
@@ -86,7 +85,7 @@ const PropertyModal: React.FC<PropertyModalProps> = ({ isOpen, onClose, property
                         Authorization: `Bearer ${token}`
                     }
                 });
-                return response.data; // Assuming the API returns an array of availability dates
+                return response.data;
             } catch (error) {
                 console.error('Error fetching existing availability dates:', error);
                 return [];
@@ -169,13 +168,13 @@ const PropertyModal: React.FC<PropertyModalProps> = ({ isOpen, onClose, property
             <div className="modal">
                 <div className="modal-content">
                     <span className="close-button" onClick={onClose}>&times;</span>
-                    <h2>{property ? 'Update Room' : 'Create New Room'}</h2>
+                    <h2>{property ? 'Mettre à jour' : 'Créer'}</h2>
                     <input
                         type="text"
                         name="name"
                         value={formData.name}
                         onChange={handleInputChange}
-                        placeholder="Room Name"
+                        placeholder="Nom"
                     />
                     <input
                         type="text"
@@ -189,14 +188,14 @@ const PropertyModal: React.FC<PropertyModalProps> = ({ isOpen, onClose, property
                         name="address"
                         value={formData.address}
                         onChange={handleInputChange}
-                        placeholder="Address"
+                        placeholder="Addresse"
                     />
                     <input
                         type="number"
                         name="price"
                         value={formData.price}
                         onChange={handleInputChange}
-                        placeholder="Price"
+                        placeholder="Prix"
                     />
                     <input
                         type="file"
@@ -205,14 +204,14 @@ const PropertyModal: React.FC<PropertyModalProps> = ({ isOpen, onClose, property
                         accept="image/*"
                     />
                     <div>
-                        <label>Unavailability Dates:</label>
+                        <label>Dates d'Indisponibilités:</label>
                         <AvailabilityPicker
                             availabilityDates={availabilityDates}
                             setAvailabilityDates={setAvailabilityDates}
                         />
                     </div>
                     <button onClick={handleSubmit}>
-                        {property ? 'Update' : 'Create'}
+                        {property ? 'Mettre à jour' : 'Créer'}
                     </button>
                 </div>
             </div>

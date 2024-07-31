@@ -44,10 +44,10 @@ const ClientDashboard: React.FC = () => {
     return (
         <div className="client-dashboard">
             {error && <p className="error">{error}</p>}
-            <button onClick={() => setShowReservations(true)}>My Reservations</button>
-            <button onClick={() => setShowEditProfile(true)}>Edit Profile</button>
-            <button onClick={() => setIsVipModalOpen(true)}>Check VIP Status</button>
-            <button onClick={() => setShowServices(true)}>View Services</button>
+            <button onClick={() => setShowReservations(true)}>Mes Réservations</button>
+            <button onClick={() => setShowEditProfile(true)}>Modifier Profil</button>
+            <button onClick={() => setIsVipModalOpen(true)}>Vérifier Status VIP</button>
+            <button onClick={() => setShowServices(true)}>Voir les Services</button>
             <div className="properties-list">
                 {properties.length > 0 ? (
                     properties.map(property => (
@@ -56,7 +56,7 @@ const ClientDashboard: React.FC = () => {
                             <p>{property.description}</p>
                             <p>Price: ${property.price}</p>
                             <img className='img-reserve' src={property.imageUrl} alt={property.name} />
-                            <button onClick={() => setSelectedProperty(property)}>Reserve</button>
+                            <button onClick={() => setSelectedProperty(property)}>Réserver</button>
                         </div>
                     ))
                 ) : (

@@ -135,8 +135,8 @@ const VipStatusModal: React.FC<VipStatusModalProps> = ({ isOpen, onRequestClose,
             onRequestClose={onRequestClose}
             contentLabel="VIP Status Modal"
         >
-            <h2>VIP Status</h2>
-            <p>VIP Status: {vipStatus ? 'Activé' : 'Non'}</p>
+            <h2>Status VIP</h2>
+            <p>VIP: {vipStatus ? 'Activé' : 'Non'}</p>
             {!vipStatus ? (
                 <button onClick={handlePayment} disabled={loading}>
                     {loading ? 'Proces en cours...' : 'Activer le Status VIP pour $10'}
@@ -147,23 +147,23 @@ const VipStatusModal: React.FC<VipStatusModalProps> = ({ isOpen, onRequestClose,
                 </button>
             )}
             <button onClick={toggleHistory}>
-                {showHistory ? 'Hide History' : 'See History'}
+                {showHistory ? 'Cacher Historique' : 'Voir Historique'}
             </button>
             {showHistory && (
                 <div>
-                    <h3>Payment History</h3>
+                    <h3>Historique Paiement</h3>
                     <ul>
                         {paymentHistory.map((payment, index) => (
                             <li key={index}>
                                 {new Date(payment.date).toLocaleDateString()}: ${payment.amount}
-                                <button onClick={() => generatePDF(payment)}>Download Facture</button>
+                                <button onClick={() => generatePDF(payment)}>Télécharger la Facture</button>
                             </li>
                         ))}
                     </ul>
                 </div>
             )}
             <button onClick={onRequestClose}>
-                Return
+                Retourner
             </button>
         </Modal>
     );

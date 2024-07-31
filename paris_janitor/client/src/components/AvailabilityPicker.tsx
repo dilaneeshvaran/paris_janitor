@@ -22,7 +22,7 @@ const AvailabilityPicker: React.FC<AvailabilityPickerProps> = ({ availabilityDat
 
     return (
         <div>
-            <label>Unavailability Dates:</label>
+            <label>Dates d'Indisponibilité:</label>
             <DatePicker
                 selected={null}
                 onChange={handleDateChange}

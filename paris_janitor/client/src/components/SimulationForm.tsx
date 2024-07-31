@@ -79,13 +79,13 @@ const SimulationForm: React.FC<SimulationFormProps> = ({ isOpen, onClose }) => {
             });
 
             if (response.status === 201) {
-                setMessage('Thank you! We will contact you soon.');
+                setMessage('Merci ! nous vous contacterons !.');
                 setError(null);
                 generatePDF();
                 clearForm();
             }
         } catch (error) {
-            setError('Failed to submit the form. Please try again.');
+            setError('erreur serveur ! réessayer plus tard.');
             setMessage(null);
         } finally {
             setIsProcessing(false);
@@ -109,15 +109,15 @@ const SimulationForm: React.FC<SimulationFormProps> = ({ isOpen, onClose }) => {
         doc.text('Attention : ceci est une simulation de devis', 10, 10);
         doc.text('Details de votre demande', 10, 10);
         doc.text(`Address: ${address}`, 10, 20);
-        doc.text(`Type of Property: ${typeProperty}`, 10, 30);
-        doc.text(`Type of Location: ${typeLocation}`, 10, 40);
-        doc.text(`Number of Rooms: ${numberRooms}`, 10, 50);
-        doc.text(`Capacity: ${capacity}`, 10, 60);
-        doc.text(`Surface: ${surface} sq meters`, 10, 70);
+        doc.text(`Type de Propriété: ${typeProperty}`, 10, 30);
+        doc.text(`Type de Location: ${typeLocation}`, 10, 40);
+        doc.text(`Nombre de Chambres: ${numberRooms}`, 10, 50);
+        doc.text(`Capacité: ${capacity}`, 10, 60);
+        doc.text(`Surface: ${surface} sq metres`, 10, 70);
         doc.text(`Email: ${email}`, 10, 80);
-        doc.text(`Full Name: ${fullName}`, 10, 90);
-        doc.text(`Phone Number: ${phoneNumber}`, 10, 100);
-        doc.text(`Estimated Price: $${price}`, 10, 110);
+        doc.text(`Nom Prénom: ${fullName}`, 10, 90);
+        doc.text(`Numéro Tél: ${phoneNumber}`, 10, 100);
+        doc.text(`Prix Estimé: $${price}`, 10, 110);
         setPdf(doc);
         setIsDownloadReady(true);
     };
@@ -134,7 +134,7 @@ const SimulationForm: React.FC<SimulationFormProps> = ({ isOpen, onClose }) => {
         <div className="simulation-modal">
             <div className="simulation-modal-content">
                 <span className="simulation-close" onClick={onClose}>&times;</span>
-                <h2>Create a Simulation</h2>
+                <h2>Simulation Devis</h2>
                 <form onSubmit={handleSubmit}>
                     <label>
                         Address:
@@ -146,7 +146,7 @@ const SimulationForm: React.FC<SimulationFormProps> = ({ isOpen, onClose }) => {
                         />
                     </label>
                     <label>
-                        Type of Property:
+                        Type de Properiété:
                         <select
                             className="simulation-select-property"
                             value={typeProperty}
@@ -162,20 +162,20 @@ const SimulationForm: React.FC<SimulationFormProps> = ({ isOpen, onClose }) => {
                         </select>
                     </label>
                     <label>
-                        Type of Location:
+                        Type de Location:
                         <select
                             className="simulation-select-location"
                             value={typeLocation}
                             onChange={(e) => setTypeLocation(e.target.value)}
                             required
                         >
-                            <option value="">Select</option>
+                            <option value="">Choisir</option>
                             <option value="logement complet">Logement Complet</option>
                             <option value="logement chambre">Logement Chambre</option>
                         </select>
                     </label>
                     <label>
-                        Number of Rooms:
+                        Nombre de Chambres:
                         <input
                             type="number"
                             value={numberRooms}
@@ -184,7 +184,7 @@ const SimulationForm: React.FC<SimulationFormProps> = ({ isOpen, onClose }) => {
                         />
                     </label>
                     <label>
-                        Capacity:
+                        Capacité:
                         <input
                             type="number"
                             value={capacity}
@@ -193,7 +193,7 @@ const SimulationForm: React.FC<SimulationFormProps> = ({ isOpen, onClose }) => {
                         />
                     </label>
                     <label>
-                        Surface (sq meters):
+                        Surface (sq metres):
                         <input
                             type="number"
                             value={surface}
@@ -211,7 +211,7 @@ const SimulationForm: React.FC<SimulationFormProps> = ({ isOpen, onClose }) => {
                         />
                     </label>
                     <label>
-                        Full Name:
+                        Nom Prénom:
                         <input
                             type="text"
                             value={fullName}
@@ -220,7 +220,7 @@ const SimulationForm: React.FC<SimulationFormProps> = ({ isOpen, onClose }) => {
                         />
                     </label>
                     <label>
-                        Phone Number:
+                        Numéro Tél:
                         <input
                             type="tel"
                             value={phoneNumber}
@@ -232,7 +232,7 @@ const SimulationForm: React.FC<SimulationFormProps> = ({ isOpen, onClose }) => {
                     </label>
 
                     <button type="submit" disabled={isProcessing}>
-                        {isProcessing ? 'Processing...' : 'Génerer le devis'}
+                        {isProcessing ? 'Calcul en cours...' : 'Génerer le devis'}
                     </button>
                 </form>
                 {isDownloadReady && (

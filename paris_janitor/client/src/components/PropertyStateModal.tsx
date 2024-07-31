@@ -48,15 +48,15 @@ const PropertyStateModal: React.FC<PropertyStateModalProps> = ({ isOpen, onReque
             onRequestClose={onRequestClose}
             contentLabel="Property State Modal"
         >
-            <h2>Property State</h2>
+            <h2>état de la propriété</h2>
             {loading ? (
-                <p>Loading...</p>
+                <p>Chargement...</p>
             ) : (
                 <table>
                     <thead>
                         <tr>
                             <th>Status</th>
-                            <th>Service Type</th>
+                            <th>Type de Service</th>
                             <th>Description</th>
                         </tr>
                     </thead>
@@ -71,7 +71,7 @@ const PropertyStateModal: React.FC<PropertyStateModalProps> = ({ isOpen, onReque
                     </tbody>
                 </table>
             )}
-            <button onClick={onRequestClose}>Close</button>
+            <button onClick={onRequestClose}>Fermer</button>
         </Modal>
     );
 };

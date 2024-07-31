@@ -32,4 +32,13 @@
     flex-grow: 1;
     padding: 20px;
   }
-  
+  .logout-button{
+    background-color: #000000;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 28rem;
+    margin-left:3rem;
+  }

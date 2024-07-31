@@ -78,6 +78,26 @@ export const initInvoiceRoutes = (app: express.Express) => {
 }
   );
 
+  app.get("/invoices/vip/:clientId", authenticateToken, authorizeAdminOrOwner, async (req: Request, res: Response) => {
+    const { clientId } = req.params;
+
+    try {
+        const invoiceUsecase = new InvoiceUsecase(AppDataSource);
+        const hasPaidVip = await invoiceUsecase.hasUserPaidVip(Number(clientId));
+
+        if (hasPaidVip) {
+            res.status(200).send({ hasPaidVip: true });
+        } else {
+            res.status(404).send({ hasPaidVip: false });
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({ error: "Internal server error" });
+    }
+});
+
+
+
   app.get("/invoices/owner/:ownerId", authenticateToken, authorizeAdminOrOwner, async (req: Request, res: Response) => {
     const { ownerId } = req.params;
 

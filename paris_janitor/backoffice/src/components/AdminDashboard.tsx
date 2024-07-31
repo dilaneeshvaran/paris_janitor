@@ -1,8 +1,15 @@
 import React from 'react';
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
 import '../styles/admin.css';
 
 const AdminDashboard: React.FC = () => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem('authToken');
+    navigate('/login');
+  };
+
   return (
     <div className="dashboard-container">
       <nav className="dashboard-nav">
@@ -15,6 +22,12 @@ const AdminDashboard: React.FC = () => {
           </li>
           <li>
             <Link to="received-simulations">Received Simulations</Link>
+          </li>
+          <li>
+            <Link to="services">Services</Link>
+          </li>
+          <li>
+            <button onClick={handleLogout} className="logout-button">Logout</button>
           </li>
         </ul>
       </nav>

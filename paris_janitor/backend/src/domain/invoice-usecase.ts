@@ -2,6 +2,7 @@ import { DataSource, getRepository } from "typeorm";
 import { Invoice } from "../database/entities/invoice";
 import { Reservation } from "../database/entities/reservation";
 import { Property } from "../database/entities/property";
+import { MoreThan } from 'typeorm';
 
 export interface ListInvoice {
     limit: number;
@@ -59,6 +60,8 @@ export class InvoiceUsecase {
         return invoices;
     }
 
+
+
     async getInvoiceByUserId(clientId: number): Promise<Invoice[]> {
         const query = this.db.createQueryBuilder(Invoice, "invoices");
         
@@ -102,7 +105,19 @@ export class InvoiceUsecase {
         return invoices;
     }
 
-
+    async hasUserPaidVip(clientId: number): Promise<boolean> {
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    
+        const query = this.db.createQueryBuilder('invoice', 'invoices')
+            .where('invoices.client_id = :clientId', { clientId })
+            .andWhere('invoices.pay_vip = :payVip', { payVip: true })
+            .andWhere('invoices.date > :thirtyDaysAgo', { thirtyDaysAgo });
+    
+        const invoices = await query.getMany();
+    
+        return invoices.length > 0;
+    }
 
     async updateInvoice(
         id: number,

@@ -84,7 +84,7 @@ export class PropertyUsecase {
 
     async updateProperty(
         id: number,
-        { name, description, address, price, owner_id, availabilityCalendar, imageUrl }: UpdatePropertyParams
+        { name, description, address, price, owner_id, availabilityCalendar, imageUrl, verified }: UpdatePropertyParams
     ): Promise<Property | null> {
         const repo = this.db.getRepository(Property);
         const propertyFound = await repo.findOneBy({ id });
@@ -108,7 +108,10 @@ export class PropertyUsecase {
         if (imageUrl) {
             propertyFound.imageUrl = imageUrl;
         }
-        
+        if (typeof verified !== 'undefined') {  // Updated check for verified
+            propertyFound.verified = verified;
+        }
+    
         const propertyUpdate = await repo.save(propertyFound);
         return propertyUpdate;
     }

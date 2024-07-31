@@ -7,7 +7,7 @@ export interface CreatePropertyValidation {
   price: number;
   owner_id: number;
   imageUrl?: string;
-  verified?: boolean; // This will be set to false by default in the route
+  verified?: boolean; 
 }
 
 export const createPropertyValidation = Joi.object<CreatePropertyValidation>({

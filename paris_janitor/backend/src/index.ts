@@ -9,6 +9,7 @@ import { initPaymentRoutes } from './handlers/routes/payment-routes';
 import { initInterventionRoutes } from './handlers/routes/intervention-routes';
 import { initServiceRoutes } from './handlers/routes/service-routes';
 import { initSimulationRoutes } from './handlers/routes/simulation-routes';
+import { initProviderRoutes } from './handlers/routes/provider-routes';
 import { AppDataSource } from './database/database';
 import './services/EmailScheduler';
 import multer from 'multer';
@@ -86,6 +87,7 @@ const main = async () => {
   initInterventionRoutes(app);
   initServiceRoutes(app);
   initSimulationRoutes(app);
+  initProviderRoutes(app);
 
   app.listen(port, () => {
     console.log(`Server running on port ${port}`);

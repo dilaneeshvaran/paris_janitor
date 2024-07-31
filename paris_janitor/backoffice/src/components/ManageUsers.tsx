@@ -12,6 +12,16 @@ interface User {
     vip_status: boolean;
 }
 
+interface Invoice {
+    amount: number;
+    client_id: number;
+    date: string;
+    reservation_id: number;
+    pay_vip: boolean;
+    service_id: number;
+    id: number;
+}
+
 const ManageUsers: React.FC = () => {
     const [users, setUsers] = useState<User[]>([]);
     const [editUserId, setEditUserId] = useState<number | null>(null);
@@ -20,6 +30,7 @@ const ManageUsers: React.FC = () => {
         lastname: '',
         email: ''
     });
+    const [invoices, setInvoices] = useState<{ [key: number]: Invoice[] }>({});
     const token = localStorage.getItem('token');
 
     useEffect(() => {
@@ -37,6 +48,7 @@ const ManageUsers: React.FC = () => {
             .then((data) => {
                 if (data.users && Array.isArray(data.users)) {
                     setUsers(data.users);
+                    data.users.forEach((user: User) => fetchUserInvoices(user.id));
                 } else {
                     console.error('Data is not in expected format', data);
                 }
@@ -45,6 +57,29 @@ const ManageUsers: React.FC = () => {
                 console.error('There was a problem with the fetch operation:', error);
             });
     }, [token]);
+
+    const fetchUserInvoices = (userId: number) => {
+        fetch(`http://localhost:3000/invoices/owner/${userId}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then((data: Invoice[]) => {
+                setInvoices(prevInvoices => ({
+                    ...prevInvoices,
+                    [userId]: data
+                }));
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+            });
+    };
 
     const handleEditClick = (user: User) => {
         setEditUserId(user.id);
@@ -81,6 +116,23 @@ const ManageUsers: React.FC = () => {
         });
     };
 
+    const calculateTotalRevenue = (userId: number) => {
+        const userInvoices = invoices[userId] || [];
+        return userInvoices.reduce((total, invoice) => total + invoice.amount, 0);
+    };
+
+    const calculateMonthlyRevenue = (userId: number) => {
+        const userInvoices = invoices[userId] || [];
+        const currentMonth = new Date().getMonth();
+        const currentYear = new Date().getFullYear();
+        return userInvoices
+            .filter(invoice => {
+                const invoiceDate = new Date(invoice.date);
+                return invoiceDate.getMonth() === currentMonth && invoiceDate.getFullYear() === currentYear;
+            })
+            .reduce((total, invoice) => total + invoice.amount, 0);
+    };
+
     return (
         <div className="manage-users">
             <h2>Manage Users</h2>
@@ -91,8 +143,11 @@ const ManageUsers: React.FC = () => {
                         <th>First Name</th>
                         <th>Last Name</th>
                         <th>Email</th>
+                        <th>Role</th>
                         <th>VIP Status</th>
                         <th>Paid for VIP</th>
+                        <th>Total Revenue</th>
+                        <th>Revenue This Month</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -136,6 +191,7 @@ const ManageUsers: React.FC = () => {
                                     user.email
                                 )}
                             </td>
+                            <td>{user.role}</td>
                             <td>{user.vip_status ? 'VIP' : 'Regular'}</td>
                             <td>
                                 {user.vip_status ? (
@@ -144,6 +200,8 @@ const ManageUsers: React.FC = () => {
                                     'N/A'
                                 )}
                             </td>
+                            <td>{calculateTotalRevenue(user.id)}</td>
+                            <td>{calculateMonthlyRevenue(user.id)}</td>
                             <td>
                                 {editUserId === user.id ? (
                                     <button onClick={() => handleSaveClick(user.id)}>Save</button>

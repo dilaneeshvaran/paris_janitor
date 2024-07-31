@@ -4,9 +4,6 @@ import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 export class Intervention {
     @PrimaryGeneratedColumn()
     id!: number;
-
-    @Column()
-    property_id: number;
     
     @Column()
     service_id: number;
@@ -21,13 +18,11 @@ export class Intervention {
     status: string;
 
     constructor(
-        property_id: number,
         service_id: number,
         provider_id: number,
         date: string,
         status: string,
     ) {
-        this.property_id = property_id;
         this.service_id = service_id;
         this.provider_id = provider_id;
         this.date = date;

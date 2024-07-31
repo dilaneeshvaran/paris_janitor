@@ -8,7 +8,6 @@ export interface ListIntervention {
 
 export interface UpdateInterventionParams {
     id: number;
-    property_id?: number;
     service_id?: number;
     provider_id?: number;
     date?: string;
@@ -49,15 +48,12 @@ export class InterventionUsecase {
 
     async updateIntervention(
         id: number,
-        { property_id, service_id, provider_id, date, status }: UpdateInterventionParams
+        { service_id, provider_id, date, status }: UpdateInterventionParams
     ): Promise<Intervention | null> {
         const repo = this.db.getRepository(Intervention);
         const interventionFound = await repo.findOneBy({ id });
         if (interventionFound === null) return null;
 
-        if (property_id !== undefined) {
-            interventionFound.property_id = property_id;
-        }
         if (service_id !== undefined) {
             interventionFound.service_id = service_id;
         }

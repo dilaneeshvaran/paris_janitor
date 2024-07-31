@@ -1,7 +1,6 @@
 import Joi from "joi";
 
 export interface CreateInterventionValidation {
-    property_id: number;
     service_id: number;
     provider_id: number;
     date: string; // ISO date string
@@ -9,7 +8,6 @@ export interface CreateInterventionValidation {
 }
 
 export const createInterventionValidation = Joi.object<CreateInterventionValidation>({
-    property_id: Joi.number().required(),
     service_id: Joi.number().required(),
     provider_id: Joi.number().required(),
     date: Joi.date().iso().required(),
@@ -18,16 +16,14 @@ export const createInterventionValidation = Joi.object<CreateInterventionValidat
 
 export interface UpdateInterventionValidation {
     id: number;
-    property_id?: number;
     service_id?: number;
     provider_id?: number;
-    date?: string; // ISO date string
+    date?: string;
     status?: string;
 }
 
 export const updateInterventionValidation = Joi.object<UpdateInterventionValidation>({
     id: Joi.number().required(),
-    property_id: Joi.number().optional(),
     service_id: Joi.number().optional(),
     provider_id: Joi.number().optional(),
     date: Joi.date().iso().optional(),

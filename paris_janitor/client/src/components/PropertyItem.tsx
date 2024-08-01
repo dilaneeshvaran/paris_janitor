@@ -1,4 +1,5 @@
 import React from 'react';
+import '../styles/property-item.css';
 import { Property } from './types';
 
 interface PropertyItemProps {
@@ -9,20 +10,63 @@ interface PropertyItemProps {
     onViewState: (id: number) => void;
 }
 
-const PropertyItem: React.FC<PropertyItemProps> = ({ property, onModifyRoom, onDeleteRoom, onViewReservations, onViewState }) => {
+const PropertyItem: React.FC<PropertyItemProps> = ({
+    property,
+    onModifyRoom,
+    onDeleteRoom,
+    onViewReservations,
+    onViewState,
+}) => {
     return (
-        <li style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-            <img src={property.imageUrl} alt={property.name} style={{ width: '50px', height: '50px', marginRight: '10px' }} />
-            <div style={{ flexGrow: 1 }}>
-                <div>{property.name} {property.verified && <span style={{ color: 'green' }}>(Vérifié)</span>}</div>
-                <div>{property.description}</div>
-                <div>Addresse: {property.address}</div>
-                <div>Prix: ${property.price}</div>
+        <li className="property-item">
+            <img
+                src={property.imageUrl}
+                alt={property.name}
+                className="property-item__image"
+            />
+            <div className="property-item__details">
+                <div className="property-item__name">
+                    {property.name}
+                    {property.verified && (
+                        <span className="property-item__verified">
+                            (Vérifié)
+                        </span>
+                    )}
+                </div>
+                <div className="property-item__description">
+                    {property.description}
+                </div>
+                <div className="property-item__address">
+                    Addresse: {property.address}
+                </div>
+                <div className="property-item__price">
+                    Prix: ${property.price}
+                </div>
             </div>
-            <button onClick={() => onModifyRoom(property)} style={{ marginRight: '5px' }}>Modifier</button>
-            <button onClick={() => onDeleteRoom(property.id)} style={{ marginRight: '5px' }}>Supprimer</button>
-            <button onClick={() => onViewReservations(property.id)} style={{ marginRight: '5px' }}>Voir Réservations</button>
-            <button onClick={() => onViewState(property.id)}>Voir L'état</button>
+            <button
+                onClick={() => onModifyRoom(property)}
+                className="property-item__button"
+            >
+                Modifier
+            </button>
+            <button
+                onClick={() => onDeleteRoom(property.id)}
+                className="property-item__button"
+            >
+                Supprimer
+            </button>
+            <button
+                onClick={() => onViewReservations(property.id)}
+                className="property-item__button"
+            >
+                Voir Réservations
+            </button>
+            <button
+                onClick={() => onViewState(property.id)}
+                className="property-item__button"
+            >
+                Voir L'état
+            </button>
         </li>
     );
 };

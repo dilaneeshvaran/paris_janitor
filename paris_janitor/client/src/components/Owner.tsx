@@ -8,6 +8,7 @@ import EditProfile from './EditProfile';
 import PropertyStateModal from './PropertyStateModal';
 import RevenueModal from './RevenueModal';
 import { Property } from './types';
+import '../styles/owner.css';
 
 const OwnerDashboard: React.FC = () => {
     const [properties, setProperties] = useState<Property[]>([]);
@@ -69,14 +70,14 @@ const OwnerDashboard: React.FC = () => {
     const handleViewRevenue = () => setIsRevenueModalOpen(true);
 
     return (
-        <div>
-            <div>
-                <button onClick={() => setIsVipModalOpen(true)}>Vérifier Status VIP</button>
-                <button onClick={handleEditProfile}>Modifier Mon Profil</button>
-                <button onClick={handleViewRevenue}>Voir les Revenues</button>
+        <div className="owner-dashboard">
+            <div className="owner-dashboard-header">
+                <button onClick={() => setIsVipModalOpen(true)} className="owner-dashboard-button">Vérifier Status VIP</button>
+                <button onClick={handleEditProfile} className="owner-dashboard-button">Modifier Mon Profil</button>
+                <button onClick={handleViewRevenue} className="owner-dashboard-button">Voir les Revenues</button>
             </div>
-            <button onClick={() => setIsCreateModalOpen(true)}>Ajouter</button>
-            <h3>Propriétés</h3>
+            <button onClick={() => setIsCreateModalOpen(true)} className="owner-dashboard-add-button">Ajouter</button>
+            <h3 className="owner-dashboard-title">Propriétés</h3>
             <PropertyList
                 properties={properties}
                 onModifyRoom={handleModifyRoom}

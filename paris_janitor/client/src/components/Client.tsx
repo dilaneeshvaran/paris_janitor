@@ -44,19 +44,25 @@ const ClientDashboard: React.FC = () => {
     return (
         <div className="client-dashboard">
             {error && <p className="error">{error}</p>}
-            <button onClick={() => setShowReservations(true)}>Mes Réservations</button>
-            <button onClick={() => setShowEditProfile(true)}>Modifier Profil</button>
-            <button onClick={() => setIsVipModalOpen(true)}>Vérifier Status VIP</button>
-            <button onClick={() => setShowServices(true)}>Voir les Services</button>
-            <div className="properties-list">
+            <div className="client-dashboard-buttons">
+                <button onClick={() => setShowReservations(true)}>Mes Réservations</button>
+                <button onClick={() => setShowEditProfile(true)}>Modifier Profil</button>
+                <button onClick={() => setIsVipModalOpen(true)}>Vérifier Status VIP</button>
+                <button onClick={() => setShowServices(true)}>Voir les Services</button>
+            </div>
+            <div className="properties-list-c">
                 {properties.length > 0 ? (
                     properties.map(property => (
-                        <div key={property.id} className="property-item">
-                            <h3>{property.name}</h3>
-                            <p>{property.description}</p>
-                            <p>Price: ${property.price}</p>
-                            <img className='img-reserve' src={property.imageUrl} alt={property.name} />
-                            <button onClick={() => setSelectedProperty(property)}>Réserver</button>
+                        <div key={property.id} className="property-item-c">
+                            <div className="property-img-wrapper-c">
+                                <img className="img-reserve-c" src={property.imageUrl} alt={property.name} />
+                            </div>
+                            <div className="property-info-c">
+                                <h3>{property.name}</h3>
+                                <p>{property.description}</p>
+                                <p className="property-price-c">Price: ${property.price}</p>
+                                <button className="reserve-button-c" onClick={() => setSelectedProperty(property)}>Réserver</button>
+                            </div>
                         </div>
                     ))
                 ) : (

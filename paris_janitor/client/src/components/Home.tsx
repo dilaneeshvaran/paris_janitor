@@ -63,7 +63,7 @@ const Home: React.FC = () => {
             <p>Bienvenue chez Paris Janitor (PJ)
                 Depuis 2018, Paris Janitor (PJ) révolutionne la conciergerie immobilière à Paris en offrant des services de gestion locative saisonnière de qualité supérieure. Nous prenons en charge toutes les étapes de la location de votre bien immobilier, de la gestion des réservations à l'entretien, en passant par l'accueil des clients. Grâce à notre plateforme en ligne intuitive, les propriétaires peuvent facilement obtenir une simulation de devis et de gains potentiels, leur permettant de louer leurs logements en toute sérénité. Rejoignez de nombreux bailleurs satisfaits qui ont choisi PJ pour la qualité de notre accueil et la richesse de nos prestations.</p>
             {properties.length === 0 ? (
-                <p>Chargement propriétés...</p>
+                <p>Chargement...</p>
             ) : (
                 <div className="slideshow">
                     {properties.map((property, index) => (

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
+import '../styles/services.css';
 
 const stripePromise = loadStripe('pk_test_51PScAqGc0PhuZBe9Uqm7XP3iXPKio8QNqbt4iNfSINUE06VzAPldOUwEgVn94rLLmQKd8STxK6fj12YKwBeiMRbS00DCyPSNGY');
 
@@ -111,8 +112,8 @@ const Services: React.FC<ServicesProps> = ({ userId, onClose }) => {
     };
 
     return (
-        <div className="modal">
-            <div className="modal-content">
+        <div className="services-modal">
+            <div className="services-modal-content">
                 <button className="close-button" onClick={onClose}>Fermer</button>
                 {error && <p className="error">{error}</p>}
                 {services.length > 0 ? (

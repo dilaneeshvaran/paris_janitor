@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import 'react-datepicker/dist/react-datepicker.css';
+import '../styles/property-modal.css';
 import AvailabilityPicker from './AvailabilityPicker';
 import { Property } from './types';
 
@@ -13,7 +14,14 @@ interface PropertyModalProps {
     setAvailabilityDates: React.Dispatch<React.SetStateAction<Date[]>>;
 }
 
-const PropertyModal: React.FC<PropertyModalProps> = ({ isOpen, onClose, property, setProperties, availabilityDates, setAvailabilityDates }) => {
+const PropertyModal: React.FC<PropertyModalProps> = ({
+    isOpen,
+    onClose,
+    property,
+    setProperties,
+    availabilityDates,
+    setAvailabilityDates,
+}) => {
     const [formData, setFormData] = useState<Omit<Property, 'id' | 'verified'>>({
         name: property ? property.name : '',
         description: property ? property.description : '',
@@ -165,11 +173,12 @@ const PropertyModal: React.FC<PropertyModalProps> = ({ isOpen, onClose, property
 
     return (
         isOpen && (
-            <div className="modal">
-                <div className="modal-content">
-                    <span className="close-button" onClick={onClose}>&times;</span>
-                    <h2>{property ? 'Mettre à jour' : 'Créer'}</h2>
+            <div className="property-modal__overlay">
+                <div className="property-modal__content">
+                    <span className="property-modal__close-button" onClick={onClose}>&times;</span>
+                    <h2 className="property-modal__title">{property ? 'Mettre à jour' : 'Créer'}</h2>
                     <input
+                        className="property-modal__input"
                         type="text"
                         name="name"
                         value={formData.name}
@@ -177,6 +186,7 @@ const PropertyModal: React.FC<PropertyModalProps> = ({ isOpen, onClose, property
                         placeholder="Nom"
                     />
                     <input
+                        className="property-modal__input"
                         type="text"
                         name="description"
                         value={formData.description}
@@ -184,6 +194,7 @@ const PropertyModal: React.FC<PropertyModalProps> = ({ isOpen, onClose, property
                         placeholder="Description"
                     />
                     <input
+                        className="property-modal__input"
                         type="text"
                         name="address"
                         value={formData.address}
@@ -191,6 +202,7 @@ const PropertyModal: React.FC<PropertyModalProps> = ({ isOpen, onClose, property
                         placeholder="Addresse"
                     />
                     <input
+                        className="property-modal__input"
                         type="number"
                         name="price"
                         value={formData.price}
@@ -198,19 +210,20 @@ const PropertyModal: React.FC<PropertyModalProps> = ({ isOpen, onClose, property
                         placeholder="Prix"
                     />
                     <input
+                        className="property-modal__input"
                         type="file"
                         name="image"
                         onChange={handleFileChange}
                         accept="image/*"
                     />
                     <div>
-                        <label>Dates d'Indisponibilités:</label>
+                        <label className="property-modal__label">Dates d'Indisponibilités:</label>
                         <AvailabilityPicker
                             availabilityDates={availabilityDates}
                             setAvailabilityDates={setAvailabilityDates}
                         />
                     </div>
-                    <button onClick={handleSubmit}>
+                    <button className="property-modal__button" onClick={handleSubmit}>
                         {property ? 'Mettre à jour' : 'Créer'}
                     </button>
                 </div>

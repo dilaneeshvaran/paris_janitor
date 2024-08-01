@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import '../styles/edit-profil.css';
 
 interface EditProfileProps {
     userId: string;
@@ -106,13 +107,13 @@ const EditProfile: React.FC<EditProfileProps> = ({ userId, onClose }) => {
     };
 
     return (
-        <div className="modal">
-            <div className="modal-content">
-                <button className="close-button" onClick={onClose}>Fermer</button>
-                <h2>Modifier Profil</h2>
-                {error && <p className="error">{error}</p>}
-                {success && <p className="success">{success}</p>}
-                <form onSubmit={handleSubmit}>
+        <div className="edit-profile-modal">
+            <div className="edit-profile-modal-content">
+                <button className="edit-profile-close-button" onClick={onClose}>Fermer</button>
+                <h2 className="edit-profile-title">Modifier Profil</h2>
+                {error && <p className="edit-profile-error">{error}</p>}
+                {success && <p className="edit-profile-success">{success}</p>}
+                <form className="edit-profile-form" onSubmit={handleSubmit}>
                     <label>
                         Nom:
                         <input type="text" name="firstname" value={user.firstname} onChange={handleChange} />
@@ -125,13 +126,13 @@ const EditProfile: React.FC<EditProfileProps> = ({ userId, onClose }) => {
                         Email:
                         <input type="email" name="email" value={user.email} onChange={handleChange} />
                     </label>
-                    <button type="submit">Enregistrer</button>
+                    <button type="submit" className="edit-profile-button">Enregistrer</button>
                 </form>
-                <button onClick={() => setShowPasswordForm(!showPasswordForm)}>
+                <button className="edit-profile-toggle-password-button" onClick={() => setShowPasswordForm(!showPasswordForm)}>
                     {showPasswordForm ? 'Annuler' : 'Changer le MDP'}
                 </button>
                 {showPasswordForm && (
-                    <form onSubmit={handlePasswordSubmit}>
+                    <form className="edit-profile-form" onSubmit={handlePasswordSubmit}>
                         <label>
                             Nouveau MDP:
                             <input type="password" name="password" value={password} onChange={handlePasswordChange} />
@@ -140,7 +141,7 @@ const EditProfile: React.FC<EditProfileProps> = ({ userId, onClose }) => {
                             Confirmer MDP:
                             <input type="password" name="confirmPassword" value={confirmPassword} onChange={handleConfirmPasswordChange} />
                         </label>
-                        <button type="submit">Enregistrer le Nouveau MDP</button>
+                        <button type="submit" className="edit-profile-button">Enregistrer le Nouveau MDP</button>
                     </form>
                 )}
             </div>

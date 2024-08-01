@@ -1,0 +1,80 @@
+.reserve-modal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.reserve-modal__content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 600px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+    text-align: center;
+}
+
+.reserve-modal__title {
+    margin-bottom: 20px;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.reserve-modal__error {
+    color: red;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.reserve-modal__calendar {
+    margin-bottom: 20px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.reserve-modal__price {
+    font-size: 1.2em;
+    margin: 20px 0;
+}
+
+.reserve-modal__button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.reserve-modal__button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.reserve-modal__button:hover:not(:disabled) {
+    background-color: #0056b3;
+}
+
+.reserve-modal__close-button {
+    background: none;
+    border: none;
+    font-size: 1em;
+    cursor: pointer;
+    margin-top: 10px;
+    text-decoration: underline;
+    color: #333;
+}
+
+.reserve-modal__close-button:hover {
+    color: #000;
+}

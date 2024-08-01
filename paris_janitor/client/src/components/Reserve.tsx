@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { loadStripe } from '@stripe/stripe-js';
+import '../styles/reserve.css';
 
 const stripePromise = loadStripe('pk_test_51PScAqGc0PhuZBe9Uqm7XP3iXPKio8QNqbt4iNfSINUE06VzAPldOUwEgVn94rLLmQKd8STxK6fj12YKwBeiMRbS00DCyPSNGY');
 
@@ -181,7 +182,7 @@ const Reserve: React.FC<ReserveProps> = ({ propertyId, price, onClose }) => {
     return (
         <div className="modal">
             <div className="modal-content">
-                <h2>Reserver</h2>
+                <h2>Réserver</h2>
                 {error && <p className="error">{error}</p>}
                 <Calendar
                     onChange={handleStartDateChange}
@@ -193,7 +194,7 @@ const Reserve: React.FC<ReserveProps> = ({ propertyId, price, onClose }) => {
                     value={endDate}
                     tileDisabled={tileDisabled}
                 />
-                <p><strong>Total Price: </strong>${totalPrice.toFixed(2)}</p>
+                <p><strong>Prix: </strong>${totalPrice.toFixed(2)}</p>
                 <button onClick={handleSubmit} disabled={!startDate || !endDate}>
                     Payer
                 </button>

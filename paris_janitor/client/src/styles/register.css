@@ -1,5 +1,5 @@
 
-.login-container {
+.register-container {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -9,7 +9,7 @@
     font-family: Arial, sans-serif;
 }
 
-.login-box {
+.register-box {
     background-color: #fff;
     padding: 20px;
     border-radius: 10px;
@@ -19,13 +19,14 @@
     max-width: 400px;
 }
 
-.login-box h2 {
+.register-box h2 {
     margin-bottom: 20px;
     color: #0073e6;
     font-size: 1.5em;
 }
 
-.login-box input {
+.register-box input,
+.register-box select {
     display: block;
     margin: 10px auto;
     padding: 10px;
@@ -36,7 +37,7 @@
     font-size: 1em;
 }
 
-.login-box button {
+.register-box button {
     padding: 10px 20px;
     margin-top: 10px;
     cursor: pointer;
@@ -50,12 +51,18 @@
     transition: background-color 0.3s ease;
 }
 
-.login-box button:hover {
+.register-box button:hover {
     background-color: #005bb5;
 }
 
 .error-message {
     color: red;
+    margin-bottom: 10px;
+    font-size: 0.9em;
+}
+
+.success-message {
+    color: green;
     margin-bottom: 10px;
     font-size: 0.9em;
 }

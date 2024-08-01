@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import '../styles/login.css';
+import '../styles/register.css';
 
 interface LocationState {
     role?: string;
@@ -65,11 +65,11 @@ const Register: React.FC = () => {
     };
 
     return (
-        <div className="center-content">
-            <div>
+        <div className="register-container">
+            <div className="register-box">
                 <h2>S'inscrire</h2>
-                {error && <p className="error">{error}</p>}
-                {success && <p className="success">{success}</p>}
+                {error && <p className="error-message">{error}</p>}
+                {success && <p className="success-message">{success}</p>}
                 <input
                     type="text"
                     placeholder="Nom"

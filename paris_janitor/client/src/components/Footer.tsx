@@ -6,12 +6,23 @@ import '../styles/footer.css';
 const Footer = () => {
     return (
         <footer className="footer">
-            <p>&copy; 2018 Paris Janitor. Tout droits réservé.</p>
-            <a href="mailto:eeshvarand@gmail.com"><FontAwesomeIcon icon={faEnvelope} /></a>
-            <a href="https://facebook.com"><FontAwesomeIcon icon={faFacebook} /></a>
-            <a href="https://twitter.com"><FontAwesomeIcon icon={faTwitter} /></a>
-            <a href="https://instagram.com"><FontAwesomeIcon icon={faInstagram} /></a>
+            <p>&copy; 2018 Paris Janitor. Tous droits réservés.</p>
+            <div className="footer-icons">
+                <a href="mailto:eeshvarand@gmail.com" aria-label="Email">
+                    <FontAwesomeIcon icon={faEnvelope} />
+                </a>
+                <a href="https://facebook.com" aria-label="Facebook">
+                    <FontAwesomeIcon icon={faFacebook} />
+                </a>
+                <a href="https://twitter.com" aria-label="Twitter">
+                    <FontAwesomeIcon icon={faTwitter} />
+                </a>
+                <a href="https://instagram.com" aria-label="Instagram">
+                    <FontAwesomeIcon icon={faInstagram} />
+                </a>
+            </div>
         </footer>
     );
-}
+};
+
 export default Footer;

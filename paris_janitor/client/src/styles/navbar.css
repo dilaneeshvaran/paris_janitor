@@ -1,17 +1,19 @@
+
 nav {
   position: fixed;
   top: 0;
   left: 50%;
   transform: translateX(-50%);
-  background-color: #fff;
+  background-color: #ffffff;
   padding: 1rem 2rem;
   display: flex;
   justify-content: center;
   align-items: center;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #dddddd;
   width: 100%;
-  z-index: 1000; /* Ensure navbar is on top */
-  
+  z-index: 1000;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  font-family: Arial, sans-serif;
 }
 
 nav a {
@@ -19,9 +21,26 @@ nav a {
   text-decoration: none;
   margin: 0 1rem;
   font-weight: bold;
+  transition: color 0.3s ease, text-decoration 0.3s ease;
 }
 
 nav a:hover {
   text-decoration: underline;
-  color: black;
+  color: #000000;
+}
+
+nav button {
+  background-color: #0064c9;
+  color: #ffffff;
+  border: none;
+  padding: 0.5rem 1rem;
+  margin: 0 1rem;
+  cursor: pointer;
+  border-radius: 5px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+nav button:hover {
+  background-color: #005bb5;
 }

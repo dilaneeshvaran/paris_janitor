@@ -3,7 +3,6 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import '../styles/login.css';
 
-
 const Login: React.FC = () => {
     const { userType } = useParams<{ userType: string }>();
     const navigate = useNavigate();
@@ -72,10 +71,10 @@ const Login: React.FC = () => {
     };
 
     return (
-        <div className="center-content">
-            <div>
+        <div className="login-container">
+            <div className="login-box">
                 <h2>Login en tant que {userType}</h2>
-                {error && <p className="error">{error}</p>}
+                {error && <p className="error-message">{error}</p>}
                 <input
                     type="email"
                     placeholder="Email"

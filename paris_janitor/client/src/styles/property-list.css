@@ -1,0 +1,12 @@
+.property-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.property-list__empty-message {
+    text-align: center;
+    color: #888;
+    font-size: 16px;
+    margin-top: 20px;
+}

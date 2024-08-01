@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import '../styles/revenue.css';
 
 interface RevenueModalProps {
     isOpen: boolean;
@@ -71,9 +72,9 @@ const RevenueModal: React.FC<RevenueModalProps> = ({ isOpen, onClose, ownerId })
     if (!isOpen) return null;
 
     return (
-        <div className="modal">
-            <div className="modal-content">
-                <span className="close" onClick={onClose}>&times;</span>
+        <div className="revenue-modal">
+            <div className="revenue-modal-content">
+                <span className="revenue-modal-close" onClick={onClose}>&times;</span>
                 <h2>Détails Revenues</h2>
                 {loading ? (
                     <p>Chargement...</p>

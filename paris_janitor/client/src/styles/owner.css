@@ -1,3 +1,52 @@
+
+.owner-dashboard {
+    padding: 40px;
+    font-family: Arial, sans-serif;
+}
+
+.owner-dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.owner-dashboard-button {
+    padding: 10px 20px;
+    background-color: #4f4f4f;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 10px;
+    transition: background-color 0.3s;
+}
+
+.owner-dashboard-button:hover {
+    background-color: #000000;
+}
+
+.owner-dashboard-add-button {
+    padding: 10px 20px;
+    background-color: #45a049;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 20px;
+    transition: background-color 0.3s;
+}
+
+.owner-dashboard-add-button:hover {
+    background-color: #003dd9;
+}
+
+.owner-dashboard-title {
+    margin-top: 0;
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
 .modal {
     display: flex;
     justify-content: center;
@@ -16,6 +65,7 @@
     border-radius: 5px;
     width: 350px;
     text-align: center;
+    position: relative;
 }
 
 .close-button {

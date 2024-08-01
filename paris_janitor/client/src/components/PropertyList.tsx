@@ -1,6 +1,7 @@
 import React from 'react';
 import PropertyItem from './PropertyItem';
 import { Property } from './types';
+import '../styles/property-list.css';
 
 interface PropertyListProps {
     properties: Property[];
@@ -10,11 +11,19 @@ interface PropertyListProps {
     onViewState: (id: number) => void;
 }
 
-const PropertyList: React.FC<PropertyListProps> = ({ properties, onModifyRoom, onDeleteRoom, onViewReservations, onViewState }) => {
+const PropertyList: React.FC<PropertyListProps> = ({
+    properties,
+    onModifyRoom,
+    onDeleteRoom,
+    onViewReservations,
+    onViewState,
+}) => {
     return (
-        <ul>
+        <ul className="property-list">
             {properties.length === 0 ? (
-                <p>Aucun propriété trouvé.</p>
+                <p className="property-list__empty-message">
+                    Aucun propriété trouvé.
+                </p>
             ) : (
                 properties.map((property) => (
                     <PropertyItem

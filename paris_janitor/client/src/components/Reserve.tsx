@@ -18,6 +18,7 @@ const Reserve: React.FC<ReserveProps> = ({ propertyId, price, onClose }) => {
     const [disabledDates, setDisabledDates] = useState<Date[]>([]);
     const [totalPrice, setTotalPrice] = useState<number>(0);
     const [error, setError] = useState<string | null>(null);
+    const [dateError, setDateError] = useState<string | null>(null);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -45,7 +46,7 @@ const Reserve: React.FC<ReserveProps> = ({ propertyId, price, onClose }) => {
                     setError('Erreur avec le formattage de "availability".');
                 }
             })
-            .catch(error => {
+            .catch(() => {
                 setError('Chargement des disponibilité échoué.');
             });
     }, [propertyId]);
@@ -56,15 +57,37 @@ const Reserve: React.FC<ReserveProps> = ({ propertyId, price, onClose }) => {
                 const date = value[0];
                 if (type === 'start') {
                     setStartDate(date);
+                    if (endDate && date > endDate) {
+                        setEndDate(null);
+                        setDateError('La date de début ne peut pas être après la date de fin.');
+                    } else {
+                        setDateError(null);
+                    }
                 } else {
-                    setEndDate(date);
+                    if (startDate && date < startDate) {
+                        setDateError('La date de fin ne peut pas être avant la date de début.');
+                    } else {
+                        setEndDate(date);
+                        setDateError(null);
+                    }
                 }
             }
         } else if (value instanceof Date || value === null) {
             if (type === 'start') {
                 setStartDate(value);
+                if (endDate && value && value > endDate) {
+                    setEndDate(null);
+                    setDateError('La date de début ne peut pas être après la date de fin.');
+                } else {
+                    setDateError(null);
+                }
             } else {
-                setEndDate(value);
+                if (startDate && value && value < startDate) {
+                    setDateError('La date de fin ne peut pas être avant la date de début.');
+                } else {
+                    setEndDate(value);
+                    setDateError(null);
+                }
             }
         }
     };
@@ -183,19 +206,22 @@ const Reserve: React.FC<ReserveProps> = ({ propertyId, price, onClose }) => {
         <div className="modal">
             <div className="modal-content">
                 <h2>Réserver</h2>
-                {error && <p className="error">{error}</p>}
+                {error && <p className="reserve-modal__error">{error}</p>}
+                {dateError && <p className="reserve-modal__error">{dateError}</p>}
+                Date de début:
                 <Calendar
                     onChange={handleStartDateChange}
                     value={startDate}
                     tileDisabled={tileDisabled}
                 />
+                Date de fin:
                 <Calendar
                     onChange={handleEndDateChange}
                     value={endDate}
                     tileDisabled={tileDisabled}
                 />
                 <p><strong>Prix: </strong>${totalPrice.toFixed(2)}</p>
-                <button onClick={handleSubmit} disabled={!startDate || !endDate}>
+                <button onClick={handleSubmit} disabled={!startDate || !endDate || dateError !== null}>
                     Payer
                 </button>
                 <button onClick={onClose}>Close</button>

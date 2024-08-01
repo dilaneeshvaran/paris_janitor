@@ -30,6 +30,7 @@ const PropertyModal: React.FC<PropertyModalProps> = ({
         imageUrl: property ? property.imageUrl : ''
     });
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         if (property) {
@@ -107,12 +108,19 @@ const PropertyModal: React.FC<PropertyModalProps> = ({
         const userId = localStorage.getItem('userId');
         if (!token || !userId) return;
 
+        setError(null);
+
         let imageUrl = formData.imageUrl;
+        if (!imageUrl && !selectedFile) {
+            setError('Choisir une image.');
+            return;
+        }
+
         if (selectedFile) {
-            const formData = new FormData();
-            formData.append('image', selectedFile);
+            const uploadFormData = new FormData();
+            uploadFormData.append('image', selectedFile);
             try {
-                const response = await axios.post('http://localhost:3000/upload', formData, {
+                const response = await axios.post('http://localhost:3000/upload', uploadFormData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                         Authorization: `Bearer ${token}`
@@ -121,6 +129,7 @@ const PropertyModal: React.FC<PropertyModalProps> = ({
                 imageUrl = response.data.imageUrl;
             } catch (error) {
                 console.error('Error uploading image:', error);
+                setError('Erreur image.');
                 return;
             }
         }
@@ -155,8 +164,10 @@ const PropertyModal: React.FC<PropertyModalProps> = ({
             setAvailabilityDates([]);
         } catch (error) {
             console.error('Error saving property:', error);
+            setError('Erreur Serveur.  Réessayer.');
         }
     };
+
 
     const formatAvailabilityDate = (date: Date) => {
         const startDate = new Date(date);
@@ -177,6 +188,7 @@ const PropertyModal: React.FC<PropertyModalProps> = ({
                 <div className="property-modal__content">
                     <span className="property-modal__close-button" onClick={onClose}>&times;</span>
                     <h2 className="property-modal__title">{property ? 'Mettre à jour' : 'Créer'}</h2>
+                    {error && <p className="property-modal__error">{error}</p>}
                     <input
                         className="property-modal__input"
                         type="text"
@@ -217,7 +229,6 @@ const PropertyModal: React.FC<PropertyModalProps> = ({
                         accept="image/*"
                     />
                     <div>
-                        <label className="property-modal__label">Dates d'Indisponibilités:</label>
                         <AvailabilityPicker
                             availabilityDates={availabilityDates}
                             setAvailabilityDates={setAvailabilityDates}

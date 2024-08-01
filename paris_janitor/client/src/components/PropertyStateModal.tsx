@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import axios from 'axios';
+import '../styles/state.css';
 
 interface Service {
     id: number;
@@ -47,12 +48,14 @@ const PropertyStateModal: React.FC<PropertyStateModalProps> = ({ isOpen, onReque
             isOpen={isOpen}
             onRequestClose={onRequestClose}
             contentLabel="Property State Modal"
+            className="property-state-modal"
+            overlayClassName="property-state-modal__overlay"
         >
-            <h2>état de la propriété</h2>
+            <h2 className="property-state-modal__header">État de la propriété</h2>
             {loading ? (
-                <p>Chargement...</p>
+                <p className="property-state-modal__loading">Chargement...</p>
             ) : (
-                <table>
+                <table className="property-state-modal__table">
                     <thead>
                         <tr>
                             <th>Status</th>
@@ -71,7 +74,7 @@ const PropertyStateModal: React.FC<PropertyStateModalProps> = ({ isOpen, onReque
                     </tbody>
                 </table>
             )}
-            <button onClick={onRequestClose}>Fermer</button>
+            <button className="property-state-modal__close-button" onClick={onRequestClose}>Fermer</button>
         </Modal>
     );
 };

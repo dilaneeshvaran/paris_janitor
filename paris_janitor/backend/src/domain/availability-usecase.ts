@@ -64,6 +64,28 @@ export class AvailabilityUsecase {
             throw error;
         }
     }
+
+    async deleteAvailabilityByReservationId(reservationId: number): Promise<void> {
+        try {
+            const query = this.db.createQueryBuilder()
+                .delete()
+                .from(Availability)
+                .where("reservation_id = :reservation_id", { reservation_id: reservationId });
+    
+            const result = await query.execute();
+    
+            if (result.affected === 0) {
+                console.warn(`No availabilities found for reservation ID: ${reservationId}`);
+            } else {
+                console.log(`Deleted ${result.affected} availabilities for reservation ID: ${reservationId}`);
+            }
+        } catch (error) {
+            console.error("Error in deleteAvailabilityByReservationId:", error);
+            throw error;
+        }
+    }
+
+
     
 
     async isPropertyAvailable(propertyId: number, startDate: Date, endDate: Date): Promise<boolean> {

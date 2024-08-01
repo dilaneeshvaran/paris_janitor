@@ -85,7 +85,7 @@ const SimulationForm: React.FC<SimulationFormProps> = ({ isOpen, onClose }) => {
                 clearForm();
             }
         } catch (error) {
-            setError('erreur serveur ! réessayer plus tard.');
+            setError('reverifiez votre email!.');
             setMessage(null);
         } finally {
             setIsProcessing(false);
@@ -179,7 +179,12 @@ const SimulationForm: React.FC<SimulationFormProps> = ({ isOpen, onClose }) => {
                         <input
                             type="number"
                             value={numberRooms}
-                            onChange={(e) => setNumberRooms(Number(e.target.value))}
+                            onChange={(e) => {
+                                const value = Number(e.target.value);
+                                if (value >= 0) {
+                                    setNumberRooms(value);
+                                }
+                            }}
                             required
                         />
                     </label>
@@ -188,7 +193,12 @@ const SimulationForm: React.FC<SimulationFormProps> = ({ isOpen, onClose }) => {
                         <input
                             type="number"
                             value={capacity}
-                            onChange={(e) => setCapacity(Number(e.target.value))}
+                            onChange={(e) => {
+                                const value = Number(e.target.value);
+                                if (value >= 0) {
+                                    setCapacity(value);
+                                }
+                            }}
                             required
                         />
                     </label>
@@ -197,10 +207,16 @@ const SimulationForm: React.FC<SimulationFormProps> = ({ isOpen, onClose }) => {
                         <input
                             type="number"
                             value={surface}
-                            onChange={(e) => setSurface(Number(e.target.value))}
+                            onChange={(e) => {
+                                const value = Number(e.target.value);
+                                if (value >= 0) {
+                                    setSurface(value);
+                                }
+                            }}
                             required
                         />
                     </label>
+
                     <label>
                         Email:
                         <input

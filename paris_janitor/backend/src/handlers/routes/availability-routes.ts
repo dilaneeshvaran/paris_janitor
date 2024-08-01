@@ -59,6 +59,20 @@ export const initAvailabilityRoutes = (app: express.Express) => {
         }
     });
 
+    app.delete("/availability/reservation/:reservationId", authenticateToken, authorizeAll, async (req: Request, res: Response) => {
+        const { reservationId } = req.params;
+    
+        try {
+            const availabilityUsecase = new AvailabilityUsecase(AppDataSource);
+            await availabilityUsecase.deleteAvailabilityByReservationId(Number(reservationId));
+    
+            res.status(200).send({ message: "Availabilities deleted successfully" });
+        } catch (error) {
+            console.log(error);
+            res.status(500).send({ error: "Internal server error" });
+        }
+    });
+
     app.get("/availability/property/:propertyId", authenticateToken, authorizeAll, async (req: Request, res: Response) => {
         const { propertyId } = req.params;
     

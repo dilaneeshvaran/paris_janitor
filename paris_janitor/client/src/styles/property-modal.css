@@ -11,6 +11,12 @@
     z-index: 1000;
 }
 
+.property-modal__error{
+    color: red;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
 .property-modal__content {
     background-color: #fff;
     padding: 20px;

@@ -108,7 +108,7 @@ const ManageUsers: React.FC = () => {
                 throw new Error('Network response was not ok');
             }
             return response.json();
-        }).then((updatedUser) => {
+        }).then(() => {
             setUsers(users.map(user => (user.id === userId ? { ...user, ...editFormData } : user)));
             setEditUserId(null);
         }).catch(error => {

@@ -5,7 +5,7 @@ interface Service {
     id: number;
     description: string;
     price: number;
-    provider_id: number;
+    provider_id: number | null;
     service_type: string;
     reservation_id: number;
     status: "pending" | "completed" | "accepted" | "cancelled";
@@ -19,8 +19,7 @@ interface Provider {
 const Services: React.FC = () => {
     const [services, setServices] = useState<Service[]>([]);
     const [providers, setProviders] = useState<Provider[]>([]);
-    const [selectedProvider, setSelectedProvider] = useState<number | null>(null);
-    const [selectedStatus, setSelectedStatus] = useState<"pending" | "completed" | "accepted" | "cancelled">("pending");
+    const [confirmationMessage, setConfirmationMessage] = useState<string | null>(null);
     const token = localStorage.getItem('token');
 
     useEffect(() => {
@@ -59,9 +58,22 @@ const Services: React.FC = () => {
             });
     }, [token]);
 
-    const handleStatusChange = (serviceId: number) => {
-        if (selectedProvider === null) {
-            alert("Veillez choisir un prestataire avant de modifier le status.");
+    const handleProviderChange = (serviceId: number, providerId: number) => {
+        setServices(services.map(service =>
+            service.id === serviceId ? { ...service, provider_id: providerId } : service
+        ));
+    };
+
+    const handleStatusChange = (serviceId: number, status: "pending" | "completed" | "accepted" | "cancelled") => {
+        setServices(services.map(service =>
+            service.id === serviceId ? { ...service, status } : service
+        ));
+    };
+
+    const handleUpdate = (serviceId: number) => {
+        const serviceToUpdate = services.find(service => service.id === serviceId);
+        if (!serviceToUpdate || serviceToUpdate.provider_id === null) {
+            alert("Veuillez choisir un prestataire avant de modifier le status.");
             return;
         }
 
@@ -71,29 +83,30 @@ const Services: React.FC = () => {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
-            body: JSON.stringify({ provider_id: selectedProvider, status: selectedStatus })
+            body: JSON.stringify({ provider_id: serviceToUpdate.provider_id, status: serviceToUpdate.status })
         }).then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
             return response.json();
         }).then(() => {
-            setServices(services.map(service =>
-                service.id === serviceId ? { ...service, provider_id: selectedProvider, status: selectedStatus } : service
-            ));
-
             fetch('http://localhost:3000/interventions', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify({ service_id: serviceId, provider_id: selectedProvider, date: new Date().toISOString(), status: 'pending' })
+                body: JSON.stringify({ service_id: serviceId, provider_id: serviceToUpdate.provider_id, date: new Date().toISOString(), status: 'pending' })
             }).then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
                 return response.json();
+            }).then(() => {
+                setConfirmationMessage('Le service a été mis à jour avec succès.');
+                setTimeout(() => {
+                    setConfirmationMessage(null);
+                }, 3000);
             }).catch(error => {
                 console.error('There was a problem with the fetch operation:', error);
             });
@@ -105,6 +118,7 @@ const Services: React.FC = () => {
     return (
         <div className="manage-services">
             <h2>Services</h2>
+            {confirmationMessage && <div className="confirmation-message">{confirmationMessage}</div>}
             <table className="manage-services-table">
                 <thead>
                     <tr>
@@ -125,7 +139,7 @@ const Services: React.FC = () => {
                             <td>
                                 <select
                                     value={service.provider_id || ""}
-                                    onChange={e => setSelectedProvider(Number(e.target.value))}
+                                    onChange={e => handleProviderChange(service.id, Number(e.target.value))}
                                 >
                                     <option value="">Choisir le Prestataire</option>
                                     {providers.map(provider => (
@@ -138,7 +152,7 @@ const Services: React.FC = () => {
                             <td>
                                 <select
                                     value={service.status}
-                                    onChange={e => setSelectedStatus(e.target.value as "pending" | "completed" | "accepted" | "cancelled")}
+                                    onChange={e => handleStatusChange(service.id, e.target.value as "pending" | "completed" | "accepted" | "cancelled")}
                                 >
                                     <option value="pending">Pending</option>
                                     <option value="completed">Completed</option>
@@ -147,7 +161,7 @@ const Services: React.FC = () => {
                                 </select>
                             </td>
                             <td>
-                                <button onClick={() => handleStatusChange(service.id)}>Mettre à jour</button>
+                                <button onClick={() => handleUpdate(service.id)}>Mettre à jour</button>
                             </td>
                         </tr>
                     ))}

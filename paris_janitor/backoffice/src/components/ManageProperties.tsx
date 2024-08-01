@@ -22,10 +22,17 @@ interface Reservation {
     status: string;
 }
 
+interface PropertyReservations {
+    [key: number]: {
+        reservations: Reservation[];
+        loaded: boolean;
+        message: string;
+    };
+}
 
 const ManageProperties: React.FC = () => {
     const [properties, setProperties] = useState<Property[]>([]);
-    const [reservations, setReservations] = useState<{ [key: number]: Reservation[] }>({});
+    const [reservations, setReservations] = useState<PropertyReservations>({});
     const token = localStorage.getItem('token');
 
     useEffect(() => {
@@ -69,7 +76,6 @@ const ManageProperties: React.FC = () => {
         });
     };
 
-
     const handleViewReservationsClick = (propertyId: number) => {
         fetch(`http://localhost:3000/reservations/property/${propertyId}`, {
             headers: {
@@ -79,7 +85,15 @@ const ManageProperties: React.FC = () => {
             .then(response => response.json())
             .then(data => {
                 if (Array.isArray(data)) {
-                    setReservations(prevState => ({ ...prevState, [propertyId]: data }));
+                    setReservations(prevState => ({
+                        ...prevState,
+                        [propertyId]: { reservations: data, loaded: true, message: "" }
+                    }));
+                } else if (data.message === 'Pas de Réservation pour cette propriété') {
+                    setReservations(prevState => ({
+                        ...prevState,
+                        [propertyId]: { reservations: [], loaded: true, message: data.message }
+                    }));
                 } else {
                     console.error('Data is not in expected format', data);
                 }
@@ -120,13 +134,21 @@ const ManageProperties: React.FC = () => {
                                     Voir Réservations
                                 </button>
                                 {reservations[property.id] && (
-                                    <ul>
-                                        {reservations[property.id].map(reservation => (
-                                            <li key={reservation.id}>
-                                                {new Date(reservation.startDate).toLocaleDateString()} à {new Date(reservation.endDate).toLocaleDateString()} - {reservation.status}
-                                            </li>
-                                        ))}
-                                    </ul>
+                                    reservations[property.id].loaded ? (
+                                        reservations[property.id].reservations.length > 0 ? (
+                                            <ul>
+                                                {reservations[property.id].reservations.map(reservation => (
+                                                    <li key={reservation.id}>
+                                                        {new Date(reservation.startDate).toLocaleDateString()} à {new Date(reservation.endDate).toLocaleDateString()} - {reservation.status}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        ) : (
+                                            <p>{reservations[property.id].message}</p>
+                                        )
+                                    ) : (
+                                        <p>Chargement des réservations...</p>
+                                    )
                                 )}
                             </td>
                         </tr>
